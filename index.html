@@ -1245,8 +1245,288 @@ th {
             </div>
         </div>
 
+        <!-- Section: Cookies -->
+        <div class="code-item">
+            <div class="code-header">
+                <span>Cookies (JS & HTML)</span>
+                <div>
+                    <button class="copy-btn" onclick="copyCode(event, this)">Copy</button>
+                    <span class="icon">+</span>
+                </div>
+            </div>
+            <div class="code-content">
+                <pre><code>NN.js
+function setCookie(cname, cvalue, exdays) {
+  const d = new Date();
+  d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+  let expires = "expires=" + d.toUTCString();
+  document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+
+function getCookie(cname) {
+  let name = cname + "=";
+  let ca = document.cookie.split(';');
+  for(let i = 0; i &lt; ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
+}
+
+function checkCookie() {
+  let user = getCookie("username");
+  if (user != "") {
+    alert("Welcome again " + user);
+  } else {
+    user = prompt("Please enter your name:", "");
+    if (user != "" && user != null) {
+      setCookie("username", user, 365);
+    }
+  }
+}
+
+1.html
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;script&gt;
+function setCookie(cname, cvalue, exdays) {
+  const d = new Date();
+  d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+  let expires = "expires=" + d.toUTCString();
+  document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+
+function getCookie(cname) {
+  let name = cname + "=";
+  let decodedCookie = decodeURIComponent(document.cookie);
+  let ca = decodedCookie.split(';');
+  for(let i = 0; i &lt; ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
+}
+
+function checkCookie() {
+  let user = getCookie("username");
+  if (user != "") {
+    alert("Welcome again " + user);
+  } else {
+    user = prompt("Please enter your name:", "");
+    if (user != "" && user != null) {
+      setCookie("username", user, 30);
+    }
+  }
+}
+&lt;/script&gt;
+&lt;/head&gt;
+&lt;body onload="checkCookie()"&gt;&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+            </div>
+        </div>
         
+        <!-- Section: Node.js & Mouse Events -->
+        <div class="code-item">
+            <div class="code-header">
+                <span>Node.js & Mouse Events</span>
+                <div>
+                    <button class="copy-btn" onclick="copyCode(event, this)">Copy</button>
+                    <span class="icon">+</span>
+                </div>
+            </div>
+            <div class="code-content">
+                <pre><code>index.js
+const http = require("http");
+const server = http.createServer((req, res) => {
+  res.write("This is the response from my server");
+  res.end();
+});
+server.listen(3000, () => {
+  console.log("hello thaliva your server is running");
+});
+
+Viji.js
+const os = require('os');
+console.log("CPU Architecture: " + os.arch());
+console.log("free memory: " + os.freemem());
+console.log("total memory: " + os.totalmem());
+console.log('list of network interface: ' + os.networkInterfaces());
+console.log('os default directory for temp files: ' + os.tmpdir());
+
+Mouse event.html
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;style&gt;
+/* Styling for the buttons */
+.button {
+  display: inline-block;
+  padding: 10px 20px;
+  margin: 5px;
+  background-color: #f1f1f1;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 16px;
+  width: 120px; /* Added fixed width */
+}
+/* Styling for the color names */
+.color-name {
+  margin-bottom: 5px;
+}
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;p&gt;
+&lt;!-- Buttons with color names --&gt;
+&lt;button class="button" onmouseover="document.bgColor='green'"&gt;Bright Green&lt;/button&gt;&lt;br/&gt;
+&lt;button class="button" onmouseover="document.bgColor='red'"&gt;Red&lt;/button&gt;&lt;br/&gt;
+&lt;button class="button" onmouseover="document.bgColor='magenta'"&gt;Magenta&lt;/button&gt;&lt;br/&gt;
+&lt;button class="button" onmouseover="document.bgColor='purple'"&gt;Purple&lt;/button&gt;&lt;br/&gt;
+&lt;button class="button" onmouseover="document.bgColor='blue'"&gt;Blue&lt;/button&gt;&lt;br/&gt;
+&lt;button class="button" onmouseover="document.bgColor='yellow'"&gt;Yellow&lt;/button&gt;&lt;br/&gt;
+&lt;button class="button" onmouseover="document.bgColor='black'"&gt;Black&lt;/button&gt;&lt;br/&gt;
+&lt;button class="button" onmouseover="document.bgColor='orange'"&gt;Orange&lt;/button&gt;&lt;br/&gt;
+&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+            </div>
+        </div>
         
+        <!-- Section: Student Express App -->
+        <div class="code-item">
+            <div class="code-header">
+                <span>Student Express App</span>
+                <div>
+                    <button class="copy-btn" onclick="copyCode(event, this)">Copy</button>
+                    <span class="icon">+</span>
+                </div>
+            </div>
+            <div class="code-content">
+                <pre><code>const express = require('express');
+const bodyParser = require('body-parser');
+const app = express();
+const port = 3000;
+
+app.use(bodyParser.json());
+
+let students = [
+    { id: 1, name: 'Kasyapa', age: 34 },
+    { id: 2, name: 'MSBK', age: 33 }
+];
+
+app.get('/students', (req, res) => {
+    res.json(students);
+});
+
+app.get('/students/:id', (req, res) => {
+    const student = students.find(s => s.id === parseInt(req.params.id));
+    if (!student) return res.status(404).send('Student not found.');
+    res.json(student);
+});
+
+app.post('/students', (req, res) => {
+    const student = {
+        id: students.length + 1,
+        name: req.body.name,
+        age: req.body.age
+    };
+    students.push(student);
+    res.json(student);
+});
+
+app.put('/students/:id', (req, res) => {
+    const student = students.find(s => s.id === parseInt(req.params.id));
+    if (!student) return res.status(404).send('Student not found.');
+    student.name = req.body.name;
+    student.age = req.body.age;
+    res.json(student);
+});
+
+app.delete('/students/:id', (req, res) => {
+    const studentIndex = students.findIndex(s => s.id === parseInt(req.params.id));
+    if (studentIndex === -1) return res.status(404).send('Student not found.');
+    students.splice(studentIndex, 1);
+    res.send('Student deleted successfully.');
+});
+
+app.listen(port, () => {
+    console.log(`Server running at http://localhost:${port}`);
+});</code></pre>
+            </div>
+        </div>
+
+        <!-- Section: JWT Authentication -->
+        <div class="code-item">
+            <div class="code-header">
+                <span>JWT Authentication</span>
+                <div>
+                    <button class="copy-btn" onclick="copyCode(event, this)">Copy</button>
+                    <span class="icon">+</span>
+                </div>
+            </div>
+            <div class="code-content">
+                <pre><code>const express = require('express');
+const dotenv = require('dotenv');
+const jwt = require('jsonwebtoken');
+const app = express();
+
+dotenv.config();
+
+let PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+    console.log(`Server is up and running on ${PORT} ...`);
+});
+
+app.post("/user/generateToken", (req, res) => {
+    let jwtSecretKey = process.env.JWT_SECRET_KEY;
+    let data = {
+        time: Date(),
+        userId: 12,
+    }
+
+    const token = jwt.sign(data, jwtSecretKey);
+
+    res.send(token);
+});
+
+app.get("/user/validateToken", (req, res) => {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+
+    if (!token) return res.sendStatus(401);
+
+    let jwtSecretKey = process.env.JWT_SECRET_KEY;
+
+    try {
+        const verified = jwt.verify(token, jwtSecretKey);
+        if (verified) {
+            return res.send("Successfully Verified");
+        } else {
+            // Access Denied
+            return res.status(401).send("Access Denied");
+        }
+    } catch (error) {
+        // Access Denied
+        return res.status(401).send(error);
+    }
+});</code></pre>
+            </div>
+        </div>
 
     <div class="no-results" id="noResults">No matching codes found.</div>
 </div>
@@ -1323,5 +1603,3 @@ th {
 
 </body>
 </html>
-
-
