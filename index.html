@@ -1,14 +1,29 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/exam/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>react</title>
-    <script type="module" crossorigin src="/exam/assets/index-CyXS3dUc.js"></script>
-    <link rel="stylesheet" crossorigin href="/exam/assets/index-C7ESewXw.css">
-  </head>
-  <body>
-    <div id="root"></div>
-  </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Library</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+
+<div class="container">
+    <h1>Code Library</h1>
+
+    <div class="search-wrapper">
+        <input type="text" id="searchInput" placeholder="Search codes...">
+    </div>
+
+    <!-- Load all codes from another file -->
+    <div id="codeList"></div>
+
+    <div class="no-results" id="noResults">No matching codes found.</div>
+</div>
+
+<!-- JS -->
+<script src="index.js"></script>
+</body>
 </html>

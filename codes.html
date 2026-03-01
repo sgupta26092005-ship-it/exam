@@ -1,0 +1,410 @@
+<!-- 1. FCFS Scheduling -->
+<div class="code-item">
+    <div class="code-header">
+        <span>1(a) FCFS Scheduling</span>
+        <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
+    </div>
+    <div class="code-content">
+<pre><code>#include &lt;stdio.h&gt;
+
+int main() {
+    int n, bt[20], wt[20], tat[20], i;
+
+    printf("Enter number of processes: ");
+    scanf("%d", &n);
+
+    printf("Enter Burst Times:\n");
+    for(i=0;i&lt;n;i++)
+        scanf("%d",&bt[i]);
+
+    wt[0]=0;
+    for(i=1;i&lt;n;i++)
+        wt[i]=wt[i-1]+bt[i-1];
+
+    for(i=0;i&lt;n;i++)
+        tat[i]=wt[i]+bt[i];
+
+    printf("\nProcess BT WT TAT\n");
+    for(i=0;i&lt;n;i++)
+        printf("%d\t%d\t%d\t%d\n",i+1,bt[i],wt[i],tat[i]);
+
+    return 0;
+}</code></pre>
+    </div>
+</div>
+
+<!-- 1(b) opendir readdir -->
+<div class="code-item">
+    <div class="code-header">
+        <span>1(b) opendir() readdir()</span>
+        <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
+    </div>
+    <div class="code-content">
+<pre><code>#include &lt;stdio.h&gt;
+#include &lt;dirent.h&gt;
+
+int main() {
+    DIR *dir;
+    struct dirent *d;
+
+    dir = opendir(".");
+
+    if(dir == NULL) {
+        printf("Cannot open directory");
+        return 0;
+    }
+
+    while((d = readdir(dir)) != NULL)
+        printf("%s\n", d-&gt;d_name);
+
+    closedir(dir);
+    return 0;
+}</code></pre>
+    </div>
+</div>
+
+<!-- 2(a) SJF -->
+<div class="code-item">
+    <div class="code-header">
+        <span>2(a) SJF Scheduling</span>
+        <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
+    </div>
+    <div class="code-content">
+<pre><code>#include &lt;stdio.h&gt;
+
+int main() {
+    int n, bt[20], wt[20], tat[20], i, j, temp;
+
+    printf("Enter number of processes: ");
+    scanf("%d",&n);
+
+    printf("Enter Burst Times:\n");
+    for(i=0;i&lt;n;i++)
+        scanf("%d",&bt[i]);
+
+    for(i=0;i&lt;n;i++)
+        for(j=i+1;j&lt;n;j++)
+            if(bt[i] &gt; bt[j]) {
+                temp=bt[i];
+                bt[i]=bt[j];
+                bt[j]=temp;
+            }
+
+    wt[0]=0;
+    for(i=1;i&lt;n;i++)
+        wt[i]=wt[i-1]+bt[i-1];
+
+    for(i=0;i&lt;n;i++)
+        tat[i]=wt[i]+bt[i];
+
+    printf("\nProcess BT WT TAT\n");
+    for(i=0;i&lt;n;i++)
+        printf("%d\t%d\t%d\t%d\n",i+1,bt[i],wt[i],tat[i]);
+
+    return 0;
+}</code></pre>
+    </div>
+</div>
+
+<!-- 2(b) fcntl lseek -->
+<div class="code-item">
+    <div class="code-header">
+        <span>2(b) fcntl() lseek()</span>
+        <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
+    </div>
+    <div class="code-content">
+<pre><code>#include &lt;stdio.h&gt;
+#include &lt;fcntl.h&gt;
+#include &lt;unistd.h&gt;
+
+int main() {
+    int fd;
+    char buf[20];
+
+    fd = open("file.txt", O_RDONLY);
+
+    if(fd &lt; 0) {
+        printf("File not found");
+        return 0;
+    }
+
+    lseek(fd, 5, SEEK_SET);
+    read(fd, buf, 10);
+    buf[10] = '\0';
+
+    printf("Data: %s\n", buf);
+
+    close(fd);
+    return 0;
+}</code></pre>
+    </div>
+</div>
+
+<!-- 3(a) Round Robin -->
+<div class="code-item">
+    <div class="code-header">
+        <span>3(a) Round Robin</span>
+        <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
+    </div>
+    <div class="code-content">
+<pre><code>#include &lt;stdio.h&gt;
+
+int main() {
+    int n, bt[20], rem[20], wt[20]={0}, tat[20];
+    int tq, time=0, done, i;
+
+    printf("Enter number of processes: ");
+    scanf("%d",&n);
+
+    printf("Enter Burst Times:\n");
+    for(i=0;i&lt;n;i++){
+        scanf("%d",&bt[i]);
+        rem[i]=bt[i];
+    }
+
+    printf("Enter Time Quantum: ");
+    scanf("%d",&tq);
+
+    do {
+        done=1;
+        for(i=0;i&lt;n;i++){
+            if(rem[i]&gt;0){
+                done=0;
+                if(rem[i]&gt;tq){
+                    time+=tq;
+                    rem[i]-=tq;
+                }
+                else{
+                    time+=rem[i];
+                    wt[i]=time-bt[i];
+                    rem[i]=0;
+                }
+            }
+        }
+    } while(!done);
+
+    for(i=0;i&lt;n;i++)
+        tat[i]=bt[i]+wt[i];
+
+    printf("\nProcess BT WT TAT\n");
+    for(i=0;i&lt;n;i++)
+        printf("%d\t%d\t%d\t%d\n",i+1,bt[i],wt[i],tat[i]);
+
+    return 0;
+}</code></pre>
+    </div>
+</div>
+
+<!-- 3(b) open read write close -->
+<div class="code-item">
+    <div class="code-header">
+        <span>3(b) open() read() write() close()</span>
+        <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
+    </div>
+    <div class="code-content">
+<pre><code>#include &lt;stdio.h&gt;
+#include &lt;fcntl.h&gt;
+#include &lt;unistd.h&gt;
+
+int main() {
+    int fd;
+    char data[]="Hello OS Lab";
+    char buf[20];
+
+    fd=open("file.txt",O_CREAT|O_RDWR,0644);
+
+    write(fd,data,sizeof(data));
+    lseek(fd,0,SEEK_SET);
+
+    read(fd,buf,sizeof(data));
+    printf("Read: %s\n",buf);
+
+    close(fd);
+    return 0;
+}</code></pre>
+    </div>
+</div>
+
+<!-- 4(a) Priority -->
+<div class="code-item">
+    <div class="code-header">
+        <span>4(a) Priority Scheduling</span>
+        <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
+    </div>
+    <div class="code-content">
+<pre><code>#include &lt;stdio.h&gt;
+
+int main() {
+    int n, bt[20], pr[20], wt[20], tat[20], i, j, temp;
+
+    printf("Enter number of processes: ");
+    scanf("%d",&n);
+
+    printf("Enter Burst Time and Priority:\n");
+    for(i=0;i&lt;n;i++)
+        scanf("%d%d",&bt[i],&pr[i]);
+
+    for(i=0;i&lt;n;i++)
+        for(j=i+1;j&lt;n;j++)
+            if(pr[i]&gt;pr[j]){
+                temp=pr[i]; pr[i]=pr[j]; pr[j]=temp;
+                temp=bt[i]; bt[i]=bt[j]; bt[j]=temp;
+            }
+
+    wt[0]=0;
+    for(i=1;i&lt;n;i++)
+        wt[i]=wt[i-1]+bt[i-1];
+
+    for(i=0;i&lt;n;i++)
+        tat[i]=wt[i]+bt[i];
+
+    printf("\nProcess BT WT TAT\n");
+    for(i=0;i&lt;n;i++)
+        printf("%d\t%d\t%d\t%d\n",i+1,bt[i],wt[i],tat[i]);
+
+    return 0;
+}</code></pre>
+    </div>
+</div>
+<!-- 5. SJF With Arrival Time -->
+<div class="code-item">
+    <div class="code-header">
+        <span>5. SJF (With Arrival Time)</span>
+        <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
+    </div>
+    <div class="code-content">
+<pre><code>#include &lt;stdio.h&gt;
+
+int main() {
+    int n, at[20], bt[20], wt[20], tat[20];
+    int i, j, temp;
+
+    printf("Enter number of processes: ");
+    scanf("%d",&n);
+
+    printf("Enter Arrival Time and Burst Time:\n");
+    for(i=0;i&lt;n;i++)
+        scanf("%d%d",&at[i],&bt[i]);
+
+    // Sort by arrival time
+    for(i=0;i&lt;n;i++)
+        for(j=i+1;j&lt;n;j++)
+            if(at[i] &gt; at[j]){
+                temp=at[i]; at[i]=at[j]; at[j]=temp;
+                temp=bt[i]; bt[i]=bt[j]; bt[j]=temp;
+            }
+
+    wt[0]=0;
+    for(i=1;i&lt;n;i++)
+        wt[i]=wt[i-1]+bt[i-1];
+
+    for(i=0;i&lt;n;i++)
+        tat[i]=wt[i]+bt[i];
+
+    printf("\nProcess AT BT WT TAT\n");
+    for(i=0;i&lt;n;i++)
+        printf("%d\t%d\t%d\t%d\t%d\n",i+1,at[i],bt[i],wt[i],tat[i]);
+
+    return 0;
+}</code></pre>
+    </div>
+</div>
+<!-- 6. Round Robin With Arrival Time -->
+<div class="code-item">
+    <div class="code-header">
+        <span>6. Round Robin (With Arrival Time)</span>
+        <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
+    </div>
+    <div class="code-content">
+<pre><code>#include &lt;stdio.h&gt;
+
+int main() {
+    int n, at[20], bt[20], rem[20], wt[20]={0}, tat[20];
+    int tq, time=0, done, i;
+
+    printf("Enter number of processes: ");
+    scanf("%d",&n);
+
+    printf("Enter Arrival Time and Burst Time:\n");
+    for(i=0;i&lt;n;i++){
+        scanf("%d%d",&at[i],&bt[i]);
+        rem[i]=bt[i];
+    }
+
+    printf("Enter Time Quantum: ");
+    scanf("%d",&tq);
+
+    do {
+        done=1;
+        for(i=0;i&lt;n;i++){
+            if(rem[i]&gt;0 && at[i]&lt;=time){
+                done=0;
+                if(rem[i]&gt;tq){
+                    time+=tq;
+                    rem[i]-=tq;
+                }
+                else{
+                    time+=rem[i];
+                    wt[i]=time-bt[i]-at[i];
+                    rem[i]=0;
+                }
+            }
+        }
+    } while(!done);
+
+    for(i=0;i&lt;n;i++)
+        tat[i]=bt[i]+wt[i];
+
+    printf("\nProcess AT BT WT TAT\n");
+    for(i=0;i&lt;n;i++)
+        printf("%d\t%d\t%d\t%d\t%d\n",i+1,at[i],bt[i],wt[i],tat[i]);
+
+    return 0;
+}</code></pre>
+    </div>
+</div>
+<!-- 7. Priority With Arrival Time -->
+<div class="code-item">
+    <div class="code-header">
+        <span>7. Priority (With Arrival Time)</span>
+        <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
+    </div>
+    <div class="code-content">
+<pre><code>#include &lt;stdio.h&gt;
+
+int main() {
+    int n, at[20], bt[20], pr[20], wt[20], tat[20];
+    int i, j, temp;
+
+    printf("Enter number of processes: ");
+    scanf("%d",&n);
+
+    printf("Enter AT BT Priority:\n");
+    for(i=0;i&lt;n;i++)
+        scanf("%d%d%d",&at[i],&bt[i],&pr[i]);
+
+    // Sort by arrival time then priority
+    for(i=0;i&lt;n;i++)
+        for(j=i+1;j&lt;n;j++)
+            if(at[i] &gt; at[j] || (at[i]==at[j] && pr[i] &gt; pr[j])){
+                temp=at[i]; at[i]=at[j]; at[j]=temp;
+                temp=bt[i]; bt[i]=bt[j]; bt[j]=temp;
+                temp=pr[i]; pr[i]=pr[j]; pr[j]=temp;
+            }
+
+    wt[0]=0;
+    for(i=1;i&lt;n;i++)
+        wt[i]=wt[i-1]+bt[i-1];
+
+    for(i=0;i&lt;n;i++)
+        tat[i]=wt[i]+bt[i];
+
+    printf("\nProcess AT BT PR WT TAT\n");
+    for(i=0;i&lt;n;i++)
+        printf("%d\t%d\t%d\t%d\t%d\t%d\n",
+            i+1,at[i],bt[i],pr[i],wt[i],tat[i]);
+
+    return 0;
+}</code></pre>
+    </div>
+</div>
