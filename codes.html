@@ -552,3 +552,142 @@ int main() {
 }</code></pre>
     </div>
 </div>
+<div class="code-item">
+    <div class="code-header">
+        <span>1(b) opendir() readdir()</span>
+        <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
+    </div>
+    <div class="code-content">
+<pre><code>#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;dirent.h&gt;
+
+int main(int argc, char *argv[]) {
+    DIR *dir;
+    struct dirent *entry;
+
+    if (argc &lt; 2) {
+        dir = opendir(".");
+    } else {
+        dir = opendir(argv[1]);
+    }
+
+    if (dir == NULL) {
+        perror("opendir failed");
+        return 1;
+    }
+
+    printf("Directory listing:\n");
+
+    while ((entry = readdir(dir)) != NULL) {
+        printf("%s\n", entry-&gt;d_name);
+    }
+
+    closedir(dir);
+
+    return 0;
+}</code></pre>
+    </div>
+</div>
+<div class="code-item">
+    <div class="code-header">
+        <span>2(b) lseek()</span>
+        <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
+    </div>
+    <div class="code-content">
+<pre><code>#include &lt;stdio.h&gt;
+#include &lt;fcntl.h&gt;
+#include &lt;unistd.h&gt;
+
+int main() {
+    int fd;
+
+    fd = open("sparsefile.txt", O_CREAT | O_WRONLY, 0644);
+    if (fd &lt; 0) {
+        perror("open failed");
+        return 1;
+    }
+
+    write(fd, "Start\n", 6);
+
+    lseek(fd, 1000, SEEK_CUR);
+
+    write(fd, "End\n", 4);
+
+    close(fd);
+    return 0;
+}</code></pre>
+    </div>
+</div>
+<div class="code-item">
+    <div class="code-header">
+        <span>2(b) fcntl()</span>
+        <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
+    </div>
+    <div class="code-content">
+<pre><code>#include &lt;stdio.h&gt;
+#include &lt;fcntl.h&gt;
+#include &lt;unistd.h&gt;
+
+int main() {
+    int fd, newfd;
+
+    fd = open("sample.txt", O_WRONLY | O_CREAT, 0644);
+    if (fd &lt; 0) {
+        perror("open failed");
+        return 1;
+    }
+
+    newfd = fcntl(fd, F_DUPFD, 0);
+
+    write(fd, "Written using original FD\n", 26);
+    write(newfd, "Written using duplicated FD\n", 29);
+
+    close(fd);
+    close(newfd);
+
+    return 0;
+}</code></pre>
+    </div>
+</div>
+<div class="code-item">
+    <div class="code-header">
+        <span>3(b) open() read() write() close()</span>
+        <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
+    </div>
+    <div class="code-content">
+<pre><code>#include &lt;fcntl.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;stdio.h&gt;
+
+int main() {
+    int fd1, fd2;
+    char buffer[100];
+    int n;
+
+    fd1 = open("input.txt", O_RDONLY);
+    if (fd1 &lt; 0) {
+        printf("Error opening input file\n");
+        return 1;
+    }
+
+    fd2 = open("output.txt", O_CREAT | O_WRONLY, 0644);
+    if (fd2 &lt; 0) {
+        printf("Error creating output file\n");
+        close(fd1);
+        return 1;
+    }
+
+    while ((n = read(fd1, buffer, 100)) &gt; 0) {
+        write(fd2, buffer, n);
+    }
+
+    close(fd1);
+    close(fd2);
+
+    printf("File copied successfully.\n");
+
+    return 0;
+}</code></pre>
+    </div>
+</div>
