@@ -1,49 +1,78 @@
 :root {
-    --primary-color: #ecf0f1;
-    --secondary-color: #bdc3c7;
-    --accent-color: #3498db;
+    --primary-color: #4a90e2;
     --bg-color: #121212;
+    --card-bg: #1e1e1e;
+    --text-color: #e0e0e0;
     --code-bg: #282c34;
     --code-text: #abb2bf;
+    --shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+    --radius: 8px;
 }
 
 body {
-    font-family: 'Segoe UI', sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: var(--bg-color);
-    color: #e0e0e0;
+    color: var(--text-color);
     margin: 0;
     padding: 20px;
+    line-height: 1.6;
 }
 
 .container {
-    max-width: 900px;
-    margin: auto;
+    max-width: 800px;
+    margin: 0 auto;
+    padding-bottom: 50px;
 }
 
 h1 {
     text-align: center;
+    color: var(--text-color);
     margin-bottom: 30px;
+    font-weight: 300;
+    font-size: 2.5rem;
 }
 
+/* Search Input */
 .search-wrapper {
     margin-bottom: 25px;
+    position: sticky;
+    top: 20px;
+    z-index: 10;
 }
 
 #searchInput {
     width: 100%;
-    padding: 15px;
+    padding: 15px 20px;
     font-size: 16px;
-    border-radius: 8px;
-    background: #1e1e1e;
-    color: #fff;
-    border: 2px solid #333;
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    border: 1px solid #333;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+    outline: none;
 }
 
+#searchInput:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 12px rgba(74, 144, 226, 0.4);
+    transform: scale(1.01);
+}
+
+/* Code Items (Accordion) */
 .code-item {
-    background: #1e1e1e;
-    border-radius: 8px;
+    background: var(--card-bg);
     margin-bottom: 15px;
-    border: 1px solid #333;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.code-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
 }
 
 .code-header {
@@ -51,13 +80,25 @@ h1 {
     cursor: pointer;
     display: flex;
     justify-content: space-between;
-    font-size: 18px;
-    color: var(--secondary-color);
+    align-items: center;
+    background-color: var(--card-bg);
+    user-select: none;
+    transition: background-color 0.2s;
+}
+
+.code-header:hover {
+    background-color: #2d2d2d;
+}
+
+.code-header span {
+    font-weight: 600;
+    font-size: 1.1rem;
 }
 
 .code-content {
     max-height: 0;
     overflow: hidden;
+    transition: max-height 0.4s ease-out; /* Smooth accordion animation */
     background-color: var(--code-bg);
 }
 
@@ -65,23 +106,39 @@ pre {
     margin: 0;
     padding: 20px;
     overflow-x: auto;
-}
-
-code {
-    font-family: Consolas;
     color: var(--code-text);
 }
 
-.copy-btn {
-    background: var(--accent-color);
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
+code {
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 14px;
 }
 
+/* Copy Button */
+.copy-btn {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.3s, transform 0.1s;
+}
+
+.copy-btn:hover {
+    background-color: #357abd;
+}
+
+.copy-btn:active {
+    transform: scale(0.95);
+}
+
+/* No Results */
 .no-results {
     text-align: center;
+    padding: 30px;
+    color: #888;
+    font-style: italic;
     display: none;
-    margin-top: 20px;
 }
