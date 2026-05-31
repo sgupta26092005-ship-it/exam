@@ -1,148 +1,6 @@
 <div class="code-item">
     <div class="code-header">
-        <span> Round Robin Without Arrival Time</span>
-        <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
-    </div>
-    <div class="code-content">
-<pre><code>#include &lt;stdio.h&gt;
-
-int main() {
-    int n, i, time = 0, tq;
-    int bt[10], rem_bt[10], wt[10], tat[10];
-    float avg_wt = 0, avg_tat = 0;
-    int done;
-
-    printf("Enter number of processes: ");
-    scanf("%d", &n);
-
-    for(i = 0; i &lt; n; i++) {
-        printf("Enter burst time for process P%d: ", i+1);
-        scanf("%d", &bt[i]);
-        rem_bt[i] = bt[i];
-        wt[i] = 0;
-        tat[i] = 0;
-    }
-
-    printf("Enter Time Quantum: ");
-    scanf("%d", &tq);
-
-    do {
-        done = 1;
-        for(i = 0; i &lt; n; i++) {
-            if(rem_bt[i] &gt; 0) {
-                done = 0;
-                if(rem_bt[i] &gt; tq) {
-                    rem_bt[i] -= tq;
-                    time += tq;
-                } else {
-                    time += rem_bt[i];
-                    wt[i] = time - bt[i];
-                    rem_bt[i] = 0;
-                }
-            }
-        }
-    } while(!done);
-
-    for(i = 0; i &lt; n; i++) {
-        tat[i] = wt[i] + bt[i];
-        avg_wt += wt[i];
-        avg_tat += tat[i];
-    }
-
-    avg_wt /= n;
-    avg_tat /= n;
-
-    printf("\nProcess\tBT\tWT\tTAT\n");
-    for(i = 0; i &lt; n; i++) {
-        printf("P%d\t%d\t%d\t%d\n", i+1, bt[i], wt[i], tat[i]);
-    }
-
-    printf("\nAverage Waiting Time = %.2f", avg_wt);
-    printf("\nAverage Turnaround Time = %.2f\n", avg_tat);
-
-    return 0;
-}</code></pre>
-    </div>
-</div>
-<div class="code-item">
-    <div class="code-header">
-        <span> Round Robin With Arrival Time</span>
-        <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
-    </div>
-    <div class="code-content">
-<pre><code>#include &lt;stdio.h&gt;
-
-int main() {
-    int n, tq, i, time = 0, done = 0;
-    int at[10], bt[10], rem_bt[10], wt[10], tat[10];
-    float avg_wt = 0, avg_tat = 0;
-
-    printf("Enter number of processes: ");
-    scanf("%d", &n);
-
-    for(i = 0; i &lt; n; i++) {
-        printf("\nProcess P%d\n", i+1);
-        printf("Arrival Time: ");
-        scanf("%d", &at[i]);
-        printf("Burst Time: ");
-        scanf("%d", &bt[i]);
-        rem_bt[i] = bt[i];
-        wt[i] = 0;
-        tat[i] = 0;
-    }
-
-    printf("Enter Time Quantum: ");
-    scanf("%d", &tq);
-
-    int processes_remaining = n;
-
-    while(processes_remaining &gt; 0) {
-        done = 1;
-
-        for(i = 0; i &lt; n; i++) {
-            if(rem_bt[i] &gt; 0 && at[i] &lt;= time) {
-                done = 0;
-
-                if(rem_bt[i] &gt; tq) {
-                    rem_bt[i] -= tq;
-                    time += tq;
-                } else {
-                    time += rem_bt[i];
-                    wt[i] = time - at[i] - bt[i];
-                    if(wt[i] &lt; 0) wt[i] = 0;
-                    rem_bt[i] = 0;
-                    tat[i] = wt[i] + bt[i];
-                    processes_remaining--;
-                }
-            }
-        }
-
-        if(done == 1)
-            time++;
-    }
-
-    for(i = 0; i &lt; n; i++) {
-        avg_wt += wt[i];
-        avg_tat += tat[i];
-    }
-
-    avg_wt /= n;
-    avg_tat /= n;
-
-    printf("\nProcess\tAT\tBT\tWT\tTAT\n");
-    for(i = 0; i &lt; n; i++)
-        printf("P%d\t%d\t%d\t%d\t%d\n", i+1, at[i], bt[i], wt[i], tat[i]);
-
-    printf("\nAverage Waiting Time = %.2f", avg_wt);
-    printf("\nAverage Turnaround Time = %.2f\n", avg_tat);
-
-    return 0;
-}</code></pre>
-    </div>
-</div>
-<div class="code-item">
-    <div class="code-header">
-        <span> SJF With Arrival Time</span>
+        <span>Banker’s Algorithm (Deadlock Avoidance)</span>
         <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
     </div>
     <div class="code-content">
@@ -150,82 +8,281 @@ int main() {
 
 int main()
 {
-    int i, j, n, time = 0, min, pos;
-    int pid[10], at[10], bt[10], wt[10], tat[10], completed[10];
-    int total_wt = 0, total_tat = 0;
-    float avg_wt, avg_tat;
+    int n, m, i, j, k;
+    int alloc[10][10], max[10][10], need[10][10];
+    int avail[10], finish[10], safe[10];
 
     printf("Enter number of processes: ");
-    scanf("%d", &n);
+    scanf("%d",&n);
 
-    for(i = 0; i &lt; n; i++)
+    printf("Enter number of resources: ");
+    scanf("%d",&m);
+
+    printf("Enter Allocation Matrix:\n");
+    for(i=0;i&lt;n;i++)
+        for(j=0;j&lt;m;j++)
+            scanf("%d",&alloc[i][j]);
+
+    printf("Enter Max Matrix:\n");
+    for(i=0;i&lt;n;i++)
+        for(j=0;j&lt;m;j++)
+            scanf("%d",&max[i][j]);
+
+    printf("Enter Available Resources:\n");
+    for(i=0;i&lt;m;i++)
+        scanf("%d",&avail[i]);
+
+    for(i=0;i&lt;n;i++)
     {
-        printf("\nProcess %d\n", i+1);
-        printf("Arrival Time: ");
-        scanf("%d", &at[i]);
-        printf("Burst Time: ");
-        scanf("%d", &bt[i]);
-
-        pid[i] = i + 1;
-        completed[i] = 0;
+        finish[i]=0;
+        for(j=0;j&lt;m;j++)
+            need[i][j]=max[i][j]-alloc[i][j];
     }
 
-    int count = 0;
+    int count=0;
 
-    while(count &lt; n)
+    while(count&lt;n)
     {
-        min = 9999;
-        pos = -1;
-
-        for(i = 0; i &lt; n; i++)
+        for(i=0;i&lt;n;i++)
         {
-            if(at[i] &lt;= time && completed[i] == 0)
+            if(finish[i]==0)
             {
-                if(bt[i] &lt; min)
+                int flag=1;
+
+                for(j=0;j&lt;m;j++)
                 {
-                    min = bt[i];
-                    pos = i;
+                    if(need[i][j]&gt;avail[j])
+                    {
+                        flag=0;
+                        break;
+                    }
+                }
+
+                if(flag)
+                {
+                    safe[count++]=i;
+                    finish[i]=1;
+
+                    for(j=0;j&lt;m;j++)
+                        avail[j]+=alloc[i][j];
                 }
             }
         }
-
-        if(pos == -1)
-        {
-            time++;
-        }
-        else
-        {
-            wt[pos] = time - at[pos];
-            time += bt[pos];
-            tat[pos] = wt[pos] + bt[pos];
-
-            completed[pos] = 1;
-            count++;
-
-            total_wt += wt[pos];
-            total_tat += tat[pos];
-        }
     }
 
-    avg_wt = (float) total_wt / n;
-    avg_tat = (float) total_tat / n;
+    printf("Safe Sequence:\n");
 
-    printf("\nPID\tAT\tBT\tWT\tTAT\n");
-    for(i = 0; i &lt; n; i++)
-    {
-        printf("%d\t%d\t%d\t%d\t%d\n", pid[i], at[i], bt[i], wt[i], tat[i]);
-    }
-
-    printf("\nAverage Waiting Time: %.2f", avg_wt);
-    printf("\nAverage Turnaround Time: %.2f\n", avg_tat);
+    for(i=0;i&lt;n;i++)
+        printf("P%d ",safe[i]);
 
     return 0;
 }</code></pre>
     </div>
 </div>
+
 <div class="code-item">
     <div class="code-header">
-        <span> SJF Without Arrival Time</span>
+        <span>Producer Consumer using Semaphores</span>
+        <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
+    </div>
+    <div class="code-content">
+<pre><code>#include &lt;stdio.h&gt;
+#include &lt;pthread.h&gt;
+#include &lt;semaphore.h&gt;
+
+sem_t empty, full, mutex;
+int x = 0;
+
+void *producer()
+{
+    while(1)
+    {
+        sem_wait(&empty);
+        sem_wait(&mutex);
+
+        x++;
+        printf("Producer produces item %d\n",x);
+
+        sem_post(&mutex);
+        sem_post(&full);
+    }
+}
+
+void *consumer()
+{
+    while(1)
+    {
+        sem_wait(&full);
+        sem_wait(&mutex);
+
+        printf("Consumer consumes item %d\n",x);
+        x--;
+
+        sem_post(&mutex);
+        sem_post(&empty);
+    }
+}
+
+int main()
+{
+    pthread_t p1, c1;
+
+    sem_init(&empty,0,5);
+    sem_init(&full,0,0);
+    sem_init(&mutex,0,1);
+
+    pthread_create(&p1,NULL,producer,NULL);
+    pthread_create(&c1,NULL,consumer,NULL);
+
+    pthread_join(p1,NULL);
+    pthread_join(c1,NULL);
+
+    return 0;
+}</code></pre>
+    </div>
+</div>
+
+<div class="code-item">
+    <div class="code-header">
+        <span>IPC using Pipes</span>
+        <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
+    </div>
+    <div class="code-content">
+<pre><code>#include &lt;stdio.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;string.h&gt;
+
+int main()
+{
+    int fd[2];
+    char msg[] = "Hello";
+
+    pipe(fd);
+
+    if(fork()==0)
+    {
+        write(fd[1], msg, strlen(msg)+1);
+    }
+    else
+    {
+        char buf[20];
+        read(fd[0], buf, sizeof(buf));
+        printf("Message: %s\n", buf);
+    }
+
+    return 0;
+}</code></pre>
+    </div>
+</div>
+
+<div class="code-item">
+    <div class="code-header">
+        <span>IPC using FIFO</span>
+        <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
+    </div>
+    <div class="code-content">
+<pre><code>#include &lt;stdio.h&gt;
+#include &lt;sys/types.h&gt;
+#include &lt;sys/stat.h&gt;
+#include &lt;fcntl.h&gt;
+#include &lt;unistd.h&gt;
+
+int main()
+{
+    char *fifo = "myfifo";
+    mkfifo(fifo,0666);
+
+    if(fork()==0)
+    {
+        int fd = open(fifo,O_WRONLY);
+        write(fd,"Hello",6);
+        close(fd);
+    }
+    else
+    {
+        char buf[20];
+        int fd = open(fifo,O_RDONLY);
+        read(fd,buf,sizeof(buf));
+        printf("Message: %s\n",buf);
+        close(fd);
+    }
+
+    return 0;
+}</code></pre>
+    </div>
+</div>
+
+<div class="code-item">
+    <div class="code-header">
+        <span>IPC using Message Queue</span>
+        <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
+    </div>
+    <div class="code-content">
+<pre><code>#include &lt;stdio.h&gt;
+#include &lt;sys/ipc.h&gt;
+#include &lt;sys/msg.h&gt;
+#include &lt;string.h&gt;
+
+struct msgbuf
+{
+    long type;
+    char text[50];
+};
+
+int main()
+{
+    struct msgbuf msg;
+
+    int id = msgget(1234,0666|IPC_CREAT);
+
+    msg.type = 1;
+    strcpy(msg.text,"Hello");
+
+    msgsnd(id,&msg,sizeof(msg.text),0);
+
+    msgrcv(id,&msg,sizeof(msg.text),1,0);
+
+    printf("Message: %s\n",msg.text);
+
+    return 0;
+}</code></pre>
+    </div>
+</div>
+
+<div class="code-item">
+    <div class="code-header">
+        <span>IPC using Shared Memory</span>
+        <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
+    </div>
+    <div class="code-content">
+<pre><code>#include &lt;stdio.h&gt;
+#include &lt;sys/ipc.h&gt;
+#include &lt;sys/shm.h&gt;
+#include &lt;string.h&gt;
+
+int main()
+{
+    int shmid;
+    char *str;
+
+    shmid = shmget(1234,1024,0666|IPC_CREAT);
+
+    str = (char*) shmat(shmid,NULL,0);
+
+    strcpy(str,"Hello Shared Memory");
+
+    printf("Data: %s\n",str);
+
+    shmdt(str);
+
+    return 0;
+}</code></pre>
+    </div>
+</div>
+
+<div class="code-item">
+    <div class="code-header">
+        <span>Paging Technique</span>
         <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
     </div>
     <div class="code-content">
@@ -233,68 +290,39 @@ int main()
 
 int main()
 {
-    int i, j, n, temp;
-    int pid[10], bt[10], wt[10], tat[10];
-    int twt = 0, ttat = 0;
-    float awt, atat;
+    int page[10], frame[10];
+    int np, nf, i;
 
-    printf("\n Enter number of processes: ");
-    scanf("%d", &n);
+    printf("Enter number of pages: ");
+    scanf("%d",&np);
 
-    for(i = 0; i &lt; n; i++)
-    {
-        printf("\n Enter the burst time of process p[%d]: ", i+1);
-        scanf("%d", &bt[i]);
-        pid[i] = i + 1;
-    }
+    printf("Enter number of frames: ");
+    scanf("%d",&nf);
 
-    for(i = 0; i &lt; n; i++)
-    {
-        for(j = i + 1; j &lt; n; j++)
-        {
-            if(bt[j] &lt; bt[i])
-            {
-                temp = bt[i];
-                bt[i] = bt[j];
-                bt[j] = temp;
+    printf("Enter pages:\n");
 
-                temp = pid[i];
-                pid[i] = pid[j];
-                pid[j] = temp;
-            }
-        }
-    }
+    for(i=0;i&lt;np;i++)
+        scanf("%d",&page[i]);
 
-    for(i = 0; i &lt; n; i++)
-    {
-        if(i == 0)
-        {
-            wt[i] = 0;
-            tat[i] = bt[i];
-        }
-        else
-        {
-            wt[i] = wt[i-1] + bt[i-1];
-            tat[i] = wt[i] + bt[i];
-        }
+    for(i=0;i&lt;nf;i++)
+        frame[i] = -1;
 
-        twt += wt[i];
-        ttat += tat[i];
-    }
+    for(i=0;i&lt;np && i&lt;nf;i++)
+        frame[i] = page[i];
 
-    awt = (float)twt / n;
-    atat = (float)ttat / n;
+    printf("Frames:\n");
 
-    printf("\nAverage Waiting Time: %.2f", awt);
-    printf("\nAverage Turnaround Time: %.2f\n", atat);
+    for(i=0;i&lt;nf;i++)
+        printf("%d ",frame[i]);
 
     return 0;
 }</code></pre>
     </div>
 </div>
+
 <div class="code-item">
     <div class="code-header">
-        <span>FCFS Without Arrival Time</span>
+        <span>Segmentation Technique</span>
         <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
     </div>
     <div class="code-content">
@@ -302,40 +330,22 @@ int main()
 
 int main()
 {
+    int segment[10], base[10], limit[10];
     int n, i;
-    int bt[10], wt[10], tat[10];
-    float avg_wt = 0, avg_tat = 0;
 
-    printf("Enter number of processes: ");
-    scanf("%d", &n);
+    printf("Enter number of segments: ");
+    scanf("%d",&n);
 
-    for(i = 0; i &lt; n; i++)
+    for(i=0;i&lt;n;i++)
     {
-        printf("Enter Burst Time for Process P%d: ", i+1);
-        scanf("%d", &bt[i]);
+        printf("Enter base and limit for segment %d: ",i);
+        scanf("%d%d",&base[i],&limit[i]);
     }
 
-    wt[0] = 0;
+    printf("\nSegment Table\n");
 
-    for(i = 1; i &lt; n; i++)
-        wt[i] = wt[i-1] + bt[i-1];
-
-    for(i = 0; i &lt; n; i++)
-    {
-        tat[i] = wt[i] + bt[i];
-        avg_wt += wt[i];
-        avg_tat += tat[i];
-    }
-
-    avg_wt /= n;
-    avg_tat /= n;
-
-    printf("\nProcess\tBT\tWT\tTAT\n");
-    for(i = 0; i &lt; n; i++)
-        printf("P%d\t%d\t%d\t%d\n", i+1, bt[i], wt[i], tat[i]);
-
-    printf("\nAverage Waiting Time = %.2f", avg_wt);
-    printf("\nAverage Turnaround Time = %.2f\n", avg_tat);
+    for(i=0;i&lt;n;i++)
+        printf("%d\t%d\t%d\n",i,base[i],limit[i]);
 
     return 0;
 }</code></pre>
@@ -344,7 +354,7 @@ int main()
 
 <div class="code-item">
     <div class="code-header">
-        <span>FCFS With Arrival Time</span>
+        <span>FIFO Page Replacement</span>
         <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
     </div>
     <div class="code-content">
@@ -352,340 +362,190 @@ int main()
 
 int main()
 {
-    int n, i, j, time = 0;
-    int at[10], bt[10], wt[10], tat[10], ct[10], pid[10];
-    float avg_wt = 0, avg_tat = 0;
+    int pages[50], frame[10];
+    int n, f, i, j, k=0, fault=0;
 
-    printf("Enter number of processes: ");
-    scanf("%d", &n);
+    printf("Enter number of pages: ");
+    scanf("%d",&n);
 
-    // Input Arrival Time and Burst Time
-    for(i = 0; i &lt; n; i++)
+    printf("Enter page reference string:\n");
+    for(i=0;i&lt;n;i++)
+        scanf("%d",&pages[i]);
+
+    printf("Enter number of frames: ");
+    scanf("%d",&f);
+
+    for(i=0;i&lt;f;i++)
+        frame[i]=-1;
+
+    for(i=0;i&lt;n;i++)
     {
-        printf("\nProcess P%d\n", i+1);
-        printf("Arrival Time: ");
-        scanf("%d", &at[i]);
-        printf("Burst Time: ");
-        scanf("%d", &bt[i]);
-        pid[i] = i+1;
-    }
+        int found=0;
 
-    // Sort by Arrival Time
-    for(i = 0; i &lt; n-1; i++)
-    {
-        for(j = i+1; j &lt; n; j++)
+        for(j=0;j&lt;f;j++)
         {
-            if(at[i] &gt; at[j])
+            if(frame[j]==pages[i])
             {
-                int temp;
-                temp = at[i]; at[i] = at[j]; at[j] = temp;
-                temp = bt[i]; bt[i] = bt[j]; bt[j] = temp;
-                temp = pid[i]; pid[i] = pid[j]; pid[j] = temp;
-            }
-        }
-    }
-
-    // Completion Time
-    ct[0] = at[0] + bt[0];
-    for(i = 1; i &lt; n; i++)
-    {
-        if(ct[i-1] &lt; at[i])
-            ct[i] = at[i] + bt[i];
-        else
-            ct[i] = ct[i-1] + bt[i];
-    }
-
-    // Waiting Time and Turnaround Time
-    for(i = 0; i &lt; n; i++)
-    {
-        tat[i] = ct[i] - at[i];
-        wt[i] = tat[i] - bt[i];
-        avg_wt += wt[i];
-        avg_tat += tat[i];
-    }
-
-    avg_wt /= n;
-    avg_tat /= n;
-
-    // Display Output
-    printf("\nPID\tAT\tBT\tWT\tTAT\n");
-    for(i = 0; i &lt; n; i++)
-    {
-        printf("P%d\t%d\t%d\t%d\t%d\n",
-               pid[i], at[i], bt[i], wt[i], tat[i]);
-    }
-
-    printf("\nAverage Waiting Time = %.2f", avg_wt);
-    printf("\nAverage Turnaround Time = %.2f\n", avg_tat);
-
-    return 0;
-}</code></pre>
-    </div>
-</div>
-
-<div class="code-item">
-    <div class="code-header">
-        <span>Priority Without Arrival Time</span>
-        <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
-    </div>
-    <div class="code-content">
-<pre><code>#include &lt;stdio.h&gt;
-
-int main() {
-    int n, i, j;
-    int bt[10], wt[10], tat[10], pr[10], pid[10];
-    float avg_wt = 0, avg_tat = 0;
-
-    printf("Enter number of processes: ");
-    scanf("%d", &n);
-
-    for(i = 0; i &lt; n; i++) {
-        printf("\nProcess P%d\n", i+1);
-        printf("Burst Time: ");
-        scanf("%d", &bt[i]);
-        printf("Priority: ");
-        scanf("%d", &pr[i]);
-        pid[i] = i+1;
-    }
-
-    for(i = 0; i &lt; n-1; i++) {
-        for(j = i+1; j &lt; n; j++) {
-            if(pr[i] &gt; pr[j]) {
-                int temp;
-                temp = pr[i]; pr[i] = pr[j]; pr[j] = temp;
-                temp = bt[i]; bt[i] = bt[j]; bt[j] = temp;
-                temp = pid[i]; pid[i] = pid[j]; pid[j] = temp;
-            }
-        }
-    }
-
-    wt[0] = 0;
-
-    for(i = 1; i &lt; n; i++)
-        wt[i] = wt[i-1] + bt[i-1];
-
-    for(i = 0; i &lt; n; i++) {
-        tat[i] = wt[i] + bt[i];
-        avg_wt += wt[i];
-        avg_tat += tat[i];
-    }
-
-    avg_wt /= n;
-    avg_tat /= n;
-
-    printf("\nPID\tBT\tPR\tWT\tTAT\n");
-    for(i = 0; i &lt; n; i++)
-        printf("P%d\t%d\t%d\t%d\t%d\n", pid[i], bt[i], pr[i], wt[i], tat[i]);
-
-    printf("\nAverage Waiting Time = %.2f", avg_wt);
-    printf("\nAverage Turnaround Time = %.2f\n", avg_tat);
-
-    return 0;
-}</code></pre>
-    </div>
-</div>
-<div class="code-item">
-    <div class="code-header">
-        <span>Priority With Arrival Time</span>
-        <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
-    </div>
-    <div class="code-content">
-<pre><code>#include &lt;stdio.h&gt;
-
-int main() {
-    int n, i, time = 0, completed = 0, highest;
-    int at[10], bt[10], pr[10], wt[10], tat[10], pid[10], done[10];
-    float avg_wt = 0, avg_tat = 0;
-
-    printf("Enter number of processes: ");
-    scanf("%d", &n);
-
-    for(i = 0; i &lt; n; i++) {
-        printf("\nProcess P%d\n", i+1);
-        printf("Arrival Time: ");
-        scanf("%d", &at[i]);
-        printf("Burst Time: ");
-        scanf("%d", &bt[i]);
-        printf("Priority: ");
-        scanf("%d", &pr[i]);
-
-        pid[i] = i+1;
-        done[i] = 0;
-    }
-
-    while(completed &lt; n) {
-        highest = -1;
-
-        for(i = 0; i &lt; n; i++) {
-            if(at[i] &lt;= time && done[i] == 0) {
-                if(highest == -1 || pr[i] &lt; pr[highest])
-                    highest = i;
+                found=1;
+                break;
             }
         }
 
-        if(highest == -1) {
-            time++;
-        } else {
-            wt[highest] = time - at[highest];
-            if(wt[highest] &lt; 0) wt[highest] = 0;
-
-            time += bt[highest];
-            tat[highest] = wt[highest] + bt[highest];
-
-            avg_wt += wt[highest];
-            avg_tat += tat[highest];
-
-            done[highest] = 1;
-            completed++;
+        if(!found)
+        {
+            frame[k]=pages[i];
+            k=(k+1)%f;
+            fault++;
         }
     }
 
-    printf("\nPID\tAT\tBT\tPR\tWT\tTAT\n");
-    for(i = 0; i &lt; n; i++)
-        printf("P%d\t%d\t%d\t%d\t%d\t%d\n",
-               pid[i], at[i], bt[i], pr[i], wt[i], tat[i]);
-
-    printf("\nAverage Waiting Time = %.2f", avg_wt/n);
-    printf("\nAverage Turnaround Time = %.2f\n", avg_tat/n);
+    printf("Page Faults = %d",fault);
 
     return 0;
 }</code></pre>
     </div>
 </div>
+
 <div class="code-item">
     <div class="code-header">
-        <span>1(b) opendir() readdir()</span>
+        <span>LRU Page Replacement</span>
         <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
     </div>
     <div class="code-content">
 <pre><code>#include &lt;stdio.h&gt;
-#include &lt;stdlib.h&gt;
-#include &lt;dirent.h&gt;
 
-int main(int argc, char *argv[]) {
-    DIR *dir;
-    struct dirent *entry;
+int main()
+{
+    int pages[50], frame[10], time[10];
+    int n, f, i, j, pos, fault=0, cnt=0;
 
-    if (argc &lt; 2) {
-        dir = opendir(".");
-    } else {
-        dir = opendir(argv[1]);
+    printf("Enter number of pages: ");
+    scanf("%d",&n);
+
+    printf("Enter pages:\n");
+    for(i=0;i&lt;n;i++)
+        scanf("%d",&pages[i]);
+
+    printf("Enter number of frames: ");
+    scanf("%d",&f);
+
+    for(i=0;i&lt;f;i++)
+        frame[i]=-1;
+
+    for(i=0;i&lt;n;i++)
+    {
+        int found=0;
+
+        for(j=0;j&lt;f;j++)
+        {
+            if(frame[j]==pages[i])
+            {
+                found=1;
+                cnt++;
+                time[j]=cnt;
+            }
+        }
+
+        if(!found)
+        {
+            pos=0;
+
+            for(j=1;j&lt;f;j++)
+            {
+                if(time[j]&lt;time[pos])
+                    pos=j;
+            }
+
+            frame[pos]=pages[i];
+            cnt++;
+            time[pos]=cnt;
+            fault++;
+        }
     }
 
-    if (dir == NULL) {
-        perror("opendir failed");
-        return 1;
-    }
-
-    printf("Directory listing:\n");
-
-    while ((entry = readdir(dir)) != NULL) {
-        printf("%s\n", entry-&gt;d_name);
-    }
-
-    closedir(dir);
+    printf("Page Faults = %d",fault);
 
     return 0;
 }</code></pre>
     </div>
 </div>
+
 <div class="code-item">
     <div class="code-header">
-        <span>2(b) lseek()</span>
+        <span>Optimal Page Replacement</span>
         <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
     </div>
     <div class="code-content">
 <pre><code>#include &lt;stdio.h&gt;
-#include &lt;fcntl.h&gt;
-#include &lt;unistd.h&gt;
 
-int main() {
-    int fd;
+int main()
+{
+    int pages[50], frame[10];
+    int n, f, i, j, k, pos, fault=0;
 
-    fd = open("sparsefile.txt", O_CREAT | O_WRONLY, 0644);
-    if (fd &lt; 0) {
-        perror("open failed");
-        return 1;
+    printf("Enter number of pages: ");
+    scanf("%d",&n);
+
+    printf("Enter pages:\n");
+    for(i=0;i&lt;n;i++)
+        scanf("%d",&pages[i]);
+
+    printf("Enter number of frames: ");
+    scanf("%d",&f);
+
+    for(i=0;i&lt;f;i++)
+        frame[i]=-1;
+
+    for(i=0;i&lt;n;i++)
+    {
+        int found=0;
+
+        for(j=0;j&lt;f;j++)
+        {
+            if(frame[j]==pages[i])
+            {
+                found=1;
+                break;
+            }
+        }
+
+        if(!found)
+        {
+            int farthest=-1;
+            pos=0;
+
+            for(j=0;j&lt;f;j++)
+            {
+                int next=-1;
+
+                for(k=i+1;k&lt;n;k++)
+                {
+                    if(frame[j]==pages[k])
+                    {
+                        next=k;
+                        break;
+                    }
+                }
+
+                if(next==-1)
+                {
+                    pos=j;
+                    break;
+                }
+
+                if(next&gt;farthest)
+                {
+                    farthest=next;
+                    pos=j;
+                }
+            }
+
+            frame[pos]=pages[i];
+            fault++;
+        }
     }
 
-    write(fd, "Start\n", 6);
-
-    lseek(fd, 1000, SEEK_CUR);
-
-    write(fd, "End\n", 4);
-
-    close(fd);
-    return 0;
-}</code></pre>
-    </div>
-</div>
-<div class="code-item">
-    <div class="code-header">
-        <span>2(b) fcntl()</span>
-        <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
-    </div>
-    <div class="code-content">
-<pre><code>#include &lt;stdio.h&gt;
-#include &lt;fcntl.h&gt;
-#include &lt;unistd.h&gt;
-
-int main() {
-    int fd, newfd;
-
-    fd = open("sample.txt", O_WRONLY | O_CREAT, 0644);
-    if (fd &lt; 0) {
-        perror("open failed");
-        return 1;
-    }
-
-    newfd = fcntl(fd, F_DUPFD, 0);
-
-    write(fd, "Written using original FD\n", 26);
-    write(newfd, "Written using duplicated FD\n", 29);
-
-    close(fd);
-    close(newfd);
-
-    return 0;
-}</code></pre>
-    </div>
-</div>
-<div class="code-item">
-    <div class="code-header">
-        <span>3(b) open() read() write() close()</span>
-        <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
-    </div>
-    <div class="code-content">
-<pre><code>#include &lt;fcntl.h&gt;
-#include &lt;unistd.h&gt;
-#include &lt;stdio.h&gt;
-
-int main() {
-    int fd1, fd2;
-    char buffer[100];
-    int n;
-
-    fd1 = open("input.txt", O_RDONLY);
-    if (fd1 &lt; 0) {
-        printf("Error opening input file\n");
-        return 1;
-    }
-
-    fd2 = open("output.txt", O_CREAT | O_WRONLY, 0644);
-    if (fd2 &lt; 0) {
-        printf("Error creating output file\n");
-        close(fd1);
-        return 1;
-    }
-
-    while ((n = read(fd1, buffer, 100)) &gt; 0) {
-        write(fd2, buffer, n);
-    }
-
-    close(fd1);
-    close(fd2);
-
-    printf("File copied successfully.\n");
+    printf("Page Faults = %d",fault);
 
     return 0;
 }</code></pre>
