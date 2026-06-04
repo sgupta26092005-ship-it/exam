@@ -1,85 +1,51 @@
 <div class="code-item">
     <div class="code-header">
-        <span>Banker’s Algorithm (Deadlock Avoidance)</span>
+        <span>Banker's Algorithm (Deadlock Avoidance)</span>
         <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
     </div>
     <div class="code-content">
 <pre><code>#include &lt;stdio.h&gt;
 
-int main()
-{
-    int n, m, i, j, k;
-    int alloc[10][10], max[10][10], need[10][10];
-    int avail[10], finish[10], safe[10];
+int main() {
+    int alloc[5][3] = {{0,1,0},{2,0,0},{3,0,2},{2,1,1},{0,0,2}};
+    int max[5][3] = {{7,5,3},{3,2,2},{9,0,2},{2,2,2},{4,3,3}};
+    int avail[3] = {3,3,2};
+    int need[5][3], finish[5]={0};
+    int safe[5], count=0;
 
-    printf("Enter number of processes: ");
-    scanf("%d",&n);
-
-    printf("Enter number of resources: ");
-    scanf("%d",&m);
-
-    printf("Enter Allocation Matrix:\n");
-    for(i=0;i&lt;n;i++)
-        for(j=0;j&lt;m;j++)
-            scanf("%d",&alloc[i][j]);
-
-    printf("Enter Max Matrix:\n");
-    for(i=0;i&lt;n;i++)
-        for(j=0;j&lt;m;j++)
-            scanf("%d",&max[i][j]);
-
-    printf("Enter Available Resources:\n");
-    for(i=0;i&lt;m;i++)
-        scanf("%d",&avail[i]);
-
-    for(i=0;i&lt;n;i++)
-    {
-        finish[i]=0;
-        for(j=0;j&lt;m;j++)
+    for(int i=0;i&lt;5;i++)
+        for(int j=0;j&lt;3;j++)
             need[i][j]=max[i][j]-alloc[i][j];
-    }
 
-    int count=0;
-
-    while(count&lt;n)
-    {
-        for(i=0;i&lt;n;i++)
-        {
-            if(finish[i]==0)
-            {
+    while(count&lt;5){
+        for(int i=0;i&lt;5;i++){
+            if(!finish[i]){
                 int flag=1;
 
-                for(j=0;j&lt;m;j++)
-                {
+                for(int j=0;j&lt;3;j++)
                     if(need[i][j]&gt;avail[j])
-                    {
                         flag=0;
-                        break;
-                    }
-                }
 
-                if(flag)
-                {
+                if(flag){
+                    for(int j=0;j&lt;3;j++)
+                        avail[j]+=alloc[i][j];
+
                     safe[count++]=i;
                     finish[i]=1;
-
-                    for(j=0;j&lt;m;j++)
-                        avail[j]+=alloc[i][j];
                 }
             }
         }
     }
 
-    printf("Safe Sequence:\n");
+    printf("Safe Sequence: ");
 
-    for(i=0;i&lt;n;i++)
+    for(int i=0;i&lt;5;i++)
         printf("P%d ",safe[i]);
 
     return 0;
 }</code></pre>
     </div>
 </div>
-
 <div class="code-item">
     <div class="code-header">
         <span>Producer Consumer using Semaphores</span>
@@ -87,271 +53,65 @@ int main()
     </div>
     <div class="code-content">
 <pre><code>#include &lt;stdio.h&gt;
-#include &lt;pthread.h&gt;
-#include &lt;semaphore.h&gt;
+#include &lt;stdlib.h&gt;
 
-sem_t empty, full, mutex;
-int x = 0;
+int mutex = 1, full = 0, empty = 3, item = 0;
 
-void *producer()
-{
-    while(1)
-    {
-        sem_wait(&empty);
-        sem_wait(&mutex);
+int main() {
+    int choice;
 
-        x++;
-        printf("Producer produces item %d\n",x);
+    while (1) {
+        printf("\n1. Producer");
+        printf("\n2. Consumer");
+        printf("\n3. Exit");
+        printf("\nEnter choice: ");
+        scanf("%d", &choice);
 
-        sem_post(&mutex);
-        sem_post(&full);
-    }
-}
+        switch (choice) {
 
-void *consumer()
-{
-    while(1)
-    {
-        sem_wait(&full);
-        sem_wait(&mutex);
+        case 1:
+            if (empty &gt; 0 && mutex == 1) {
+                mutex--;
 
-        printf("Consumer consumes item %d\n",x);
-        x--;
+                item++;
+                full++;
+                empty--;
 
-        sem_post(&mutex);
-        sem_post(&empty);
-    }
-}
+                printf("Produced item %d\n", item);
 
-int main()
-{
-    pthread_t p1, c1;
+                mutex++;
+            }
+            else {
+                printf("Buffer Full!\n");
+            }
+            break;
 
-    sem_init(&empty,0,5);
-    sem_init(&full,0,0);
-    sem_init(&mutex,0,1);
+        case 2:
+            if (full &gt; 0 && mutex == 1) {
+                mutex--;
 
-    pthread_create(&p1,NULL,producer,NULL);
-    pthread_create(&c1,NULL,consumer,NULL);
+                printf("Consumed item %d\n", item);
 
-    pthread_join(p1,NULL);
-    pthread_join(c1,NULL);
+                item--;
+                full--;
+                empty++;
 
-    return 0;
-}</code></pre>
-    </div>
-</div>
+                mutex++;
+            }
+            else {
+                printf("Buffer Empty!\n");
+            }
+            break;
 
-<div class="code-item">
-    <div class="code-header">
-        <span>IPC using Pipes</span>
-        <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
-    </div>
-    <div class="code-content">
-<pre><code>#include &lt;stdio.h&gt;
-#include &lt;unistd.h&gt;
-#include &lt;string.h&gt;
-
-int main()
-{
-    int fd[2];
-    char msg[] = "Hello";
-
-    pipe(fd);
-
-    if(fork()==0)
-    {
-        write(fd[1], msg, strlen(msg)+1);
-    }
-    else
-    {
-        char buf[20];
-        read(fd[0], buf, sizeof(buf));
-        printf("Message: %s\n", buf);
+        case 3:
+            exit(0);
+        }
     }
 
     return 0;
 }</code></pre>
     </div>
 </div>
-
-<div class="code-item">
-    <div class="code-header">
-        <span>IPC using FIFO</span>
-        <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
-    </div>
-    <div class="code-content">
-<pre><code>#include &lt;stdio.h&gt;
-#include &lt;sys/types.h&gt;
-#include &lt;sys/stat.h&gt;
-#include &lt;fcntl.h&gt;
-#include &lt;unistd.h&gt;
-
-int main()
-{
-    char *fifo = "myfifo";
-    mkfifo(fifo,0666);
-
-    if(fork()==0)
-    {
-        int fd = open(fifo,O_WRONLY);
-        write(fd,"Hello",6);
-        close(fd);
-    }
-    else
-    {
-        char buf[20];
-        int fd = open(fifo,O_RDONLY);
-        read(fd,buf,sizeof(buf));
-        printf("Message: %s\n",buf);
-        close(fd);
-    }
-
-    return 0;
-}</code></pre>
-    </div>
-</div>
-
-<div class="code-item">
-    <div class="code-header">
-        <span>IPC using Message Queue</span>
-        <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
-    </div>
-    <div class="code-content">
-<pre><code>#include &lt;stdio.h&gt;
-#include &lt;sys/ipc.h&gt;
-#include &lt;sys/msg.h&gt;
-#include &lt;string.h&gt;
-
-struct msgbuf
-{
-    long type;
-    char text[50];
-};
-
-int main()
-{
-    struct msgbuf msg;
-
-    int id = msgget(1234,0666|IPC_CREAT);
-
-    msg.type = 1;
-    strcpy(msg.text,"Hello");
-
-    msgsnd(id,&msg,sizeof(msg.text),0);
-
-    msgrcv(id,&msg,sizeof(msg.text),1,0);
-
-    printf("Message: %s\n",msg.text);
-
-    return 0;
-}</code></pre>
-    </div>
-</div>
-
-<div class="code-item">
-    <div class="code-header">
-        <span>IPC using Shared Memory</span>
-        <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
-    </div>
-    <div class="code-content">
-<pre><code>#include &lt;stdio.h&gt;
-#include &lt;sys/ipc.h&gt;
-#include &lt;sys/shm.h&gt;
-#include &lt;string.h&gt;
-
-int main()
-{
-    int shmid;
-    char *str;
-
-    shmid = shmget(1234,1024,0666|IPC_CREAT);
-
-    str = (char*) shmat(shmid,NULL,0);
-
-    strcpy(str,"Hello Shared Memory");
-
-    printf("Data: %s\n",str);
-
-    shmdt(str);
-
-    return 0;
-}</code></pre>
-    </div>
-</div>
-
-<div class="code-item">
-    <div class="code-header">
-        <span>Paging Technique</span>
-        <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
-    </div>
-    <div class="code-content">
-<pre><code>#include &lt;stdio.h&gt;
-
-int main()
-{
-    int page[10], frame[10];
-    int np, nf, i;
-
-    printf("Enter number of pages: ");
-    scanf("%d",&np);
-
-    printf("Enter number of frames: ");
-    scanf("%d",&nf);
-
-    printf("Enter pages:\n");
-
-    for(i=0;i&lt;np;i++)
-        scanf("%d",&page[i]);
-
-    for(i=0;i&lt;nf;i++)
-        frame[i] = -1;
-
-    for(i=0;i&lt;np && i&lt;nf;i++)
-        frame[i] = page[i];
-
-    printf("Frames:\n");
-
-    for(i=0;i&lt;nf;i++)
-        printf("%d ",frame[i]);
-
-    return 0;
-}</code></pre>
-    </div>
-</div>
-
-<div class="code-item">
-    <div class="code-header">
-        <span>Segmentation Technique</span>
-        <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
-    </div>
-    <div class="code-content">
-<pre><code>#include &lt;stdio.h&gt;
-
-int main()
-{
-    int segment[10], base[10], limit[10];
-    int n, i;
-
-    printf("Enter number of segments: ");
-    scanf("%d",&n);
-
-    for(i=0;i&lt;n;i++)
-    {
-        printf("Enter base and limit for segment %d: ",i);
-        scanf("%d%d",&base[i],&limit[i]);
-    }
-
-    printf("\nSegment Table\n");
-
-    for(i=0;i&lt;n;i++)
-        printf("%d\t%d\t%d\n",i,base[i],limit[i]);
-
-    return 0;
-}</code></pre>
-    </div>
-</div>
-
 <div class="code-item">
     <div class="code-header">
         <span>FIFO Page Replacement</span>
@@ -362,50 +122,44 @@ int main()
 
 int main()
 {
-    int pages[50], frame[10];
-    int n, f, i, j, k=0, fault=0;
+    int frames[10], pages[30];
+    int n, f, i, j, pos = 0, faults = 0, found;
 
-    printf("Enter number of pages: ");
-    scanf("%d",&n);
+    printf("Frames: ");
+    scanf("%d", &f);
 
-    printf("Enter page reference string:\n");
-    for(i=0;i&lt;n;i++)
-        scanf("%d",&pages[i]);
+    printf("Number of pages: ");
+    scanf("%d", &n);
 
-    printf("Enter number of frames: ");
-    scanf("%d",&f);
+    printf("Reference string: ");
+    for(i=0; i&lt;n; i++)
+        scanf("%d", &pages[i]);
 
-    for(i=0;i&lt;f;i++)
-        frame[i]=-1;
+    for(i=0; i&lt;f; i++)
+        frames[i] = -1;
 
-    for(i=0;i&lt;n;i++)
+    for(i=0; i&lt;n; i++)
     {
-        int found=0;
+        found = 0;
 
-        for(j=0;j&lt;f;j++)
-        {
-            if(frame[j]==pages[i])
-            {
-                found=1;
-                break;
-            }
-        }
+        for(j=0; j&lt;f; j++)
+            if(frames[j] == pages[i])
+                found = 1;
 
         if(!found)
         {
-            frame[k]=pages[i];
-            k=(k+1)%f;
-            fault++;
+            frames[pos] = pages[i];
+            pos = (pos + 1) % f;
+            faults++;
         }
     }
 
-    printf("Page Faults = %d",fault);
+    printf("Page Faults = %d", faults);
 
     return 0;
 }</code></pre>
     </div>
 </div>
-
 <div class="code-item">
     <div class="code-header">
         <span>LRU Page Replacement</span>
@@ -416,60 +170,63 @@ int main()
 
 int main()
 {
-    int pages[50], frame[10], time[10];
-    int n, f, i, j, pos, fault=0, cnt=0;
+    int frames[10], pages[30], recent[10];
+    int n, f, i, j, faults = 0, found, pos;
 
-    printf("Enter number of pages: ");
-    scanf("%d",&n);
+    printf("Frames: ");
+    scanf("%d", &f);
 
-    printf("Enter pages:\n");
-    for(i=0;i&lt;n;i++)
-        scanf("%d",&pages[i]);
+    printf("Number of pages: ");
+    scanf("%d", &n);
 
-    printf("Enter number of frames: ");
-    scanf("%d",&f);
+    printf("Reference string: ");
+    for(i=0; i&lt;n; i++)
+        scanf("%d", &pages[i]);
 
-    for(i=0;i&lt;f;i++)
-        frame[i]=-1;
+    for(i=0; i&lt;f; i++)
+        frames[i] = -1;
 
-    for(i=0;i&lt;n;i++)
+    for(i=0; i&lt;n; i++)
     {
-        int found=0;
+        found = 0;
 
-        for(j=0;j&lt;f;j++)
+        for(j=0; j&lt;f; j++)
         {
-            if(frame[j]==pages[i])
+            if(frames[j] == pages[i])
             {
-                found=1;
-                cnt++;
-                time[j]=cnt;
+                found = 1;
+                recent[j] = i;
             }
         }
 
         if(!found)
         {
-            pos=0;
+            pos = 0;
 
-            for(j=1;j&lt;f;j++)
+            for(j=1; j&lt;f; j++)
             {
-                if(time[j]&lt;time[pos])
-                    pos=j;
+                if(frames[j] == -1)
+                {
+                    pos = j;
+                    break;
+                }
+
+                if(recent[j] &lt; recent[pos])
+                    pos = j;
             }
 
-            frame[pos]=pages[i];
-            cnt++;
-            time[pos]=cnt;
-            fault++;
+            frames[pos] = pages[i];
+            recent[pos] = i;
+            faults++;
         }
     }
 
-    printf("Page Faults = %d",fault);
+    printf("Page Faults = %d", faults);
 
     return 0;
 }</code></pre>
     </div>
 </div>
-
 <div class="code-item">
     <div class="code-header">
         <span>Optimal Page Replacement</span>
@@ -480,72 +237,379 @@ int main()
 
 int main()
 {
-    int pages[50], frame[10];
-    int n, f, i, j, k, pos, fault=0;
+    int frames[10], pages[30];
+    int n, f, i, j, k, faults = 0;
+    int found, pos, farthest;
 
-    printf("Enter number of pages: ");
-    scanf("%d",&n);
+    printf("Frames: ");
+    scanf("%d", &f);
 
-    printf("Enter pages:\n");
-    for(i=0;i&lt;n;i++)
-        scanf("%d",&pages[i]);
+    printf("Number of pages: ");
+    scanf("%d", &n);
 
-    printf("Enter number of frames: ");
-    scanf("%d",&f);
+    printf("Reference string: ");
+    for(i=0; i&lt;n; i++)
+        scanf("%d", &pages[i]);
 
-    for(i=0;i&lt;f;i++)
-        frame[i]=-1;
+    for(i=0; i&lt;f; i++)
+        frames[i] = -1;
 
-    for(i=0;i&lt;n;i++)
+    for(i=0; i&lt;n; i++)
     {
-        int found=0;
+        found = 0;
 
-        for(j=0;j&lt;f;j++)
-        {
-            if(frame[j]==pages[i])
-            {
-                found=1;
-                break;
-            }
-        }
+        for(j=0; j&lt;f; j++)
+            if(frames[j] == pages[i])
+                found = 1;
 
         if(!found)
         {
-            int farthest=-1;
-            pos=0;
+            pos = -1;
+            farthest = i;
 
-            for(j=0;j&lt;f;j++)
+            for(j=0; j&lt;f; j++)
             {
-                int next=-1;
-
-                for(k=i+1;k&lt;n;k++)
-                {
-                    if(frame[j]==pages[k])
-                    {
-                        next=k;
+                for(k=i+1; k&lt;n; k++)
+                    if(frames[j] == pages[k])
                         break;
-                    }
-                }
 
-                if(next==-1)
+                if(k == n)
                 {
-                    pos=j;
+                    pos = j;
                     break;
                 }
 
-                if(next&gt;farthest)
+                if(k &gt; farthest)
                 {
-                    farthest=next;
-                    pos=j;
+                    farthest = k;
+                    pos = j;
                 }
             }
 
-            frame[pos]=pages[i];
-            fault++;
+            if(pos == -1)
+                pos = 0;
+
+            frames[pos] = pages[i];
+            faults++;
         }
     }
 
-    printf("Page Faults = %d",fault);
+    printf("Page Faults = %d", faults);
+
+    return 0;
+}</code></pre>
+    </div>
+</div>
+<div class="code-item">
+    <div class="code-header">
+        <span>Paging Technique</span>
+        <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
+    </div>
+    <div class="code-content">
+<pre><code>#include &lt;stdio.h&gt;
+
+int main()
+{
+    int page[20];
+    int n, i, pno, offset;
+
+    printf("Number of pages: ");
+    scanf("%d", &n);
+
+    printf("Enter frame numbers:\n");
+
+    for(i=0; i&lt;n; i++)
+    {
+        printf("Page %d: ", i);
+        scanf("%d", &page[i]);
+    }
+
+    printf("Enter page number and offset: ");
+    scanf("%d%d", &pno, &offset);
+
+    if(page[pno] == -1)
+        printf("Page not present");
+    else
+        printf("Physical Address = (%d, %d)", page[pno], offset);
+
+    return 0;
+}</code></pre>
+    </div>
+</div>
+<div class="code-item">
+    <div class="code-header">
+        <span>Shared Memory</span>
+        <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
+    </div>
+    <div class="code-content">
+<pre><code>#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+#include &lt;sys/shm.h&gt;
+
+int main()
+{
+    int shmid;
+    char *shared_mem, buff[100];
+
+    shmid = shmget(2354, 1024, 0666 | IPC_CREAT);
+
+    shared_mem = (char *)shmat(shmid, NULL, 0);
+
+    printf("Enter data: ");
+    fgets(buff, 100, stdin);
+
+    strcpy(shared_mem, buff);
+
+    printf("Data in shared memory: %s", shared_mem);
+
+    return 0;
+}</code></pre>
+    </div>
+</div>
+<div class="code-item">
+    <div class="code-header">
+        <span>Message Queue - Sending Program</span>
+        <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
+    </div>
+    <div class="code-content">
+<pre><code>#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+#include &lt;sys/msg.h&gt;
+
+struct msg {
+    long type;
+    char text[100];
+};
+
+int main()
+{
+    int msgid = msgget(12345, 0666 | IPC_CREAT);
+
+    struct msg m;
+
+    m.type = 1;
+
+    while (1)
+    {
+        printf("Enter message: ");
+
+        fgets(m.text, sizeof(m.text), stdin);
+
+        m.text[strcspn(m.text, "\n")] = '\0';
+
+        msgsnd(msgid, &m, sizeof(m.text), 0);
+
+        if (strncmp(m.text, "end", 3) == 0)
+            break;
+    }
+
+    return 0;
+}</code></pre>
+    </div>
+</div>
+<div class="code-item">
+    <div class="code-header">
+        <span>Message Queue - Receiving Program</span>
+        <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
+    </div>
+    <div class="code-content">
+<pre><code>#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+#include &lt;sys/msg.h&gt;
+
+struct msg {
+    long type;
+    char text[100];
+};
+
+int main()
+{
+    int msgid = msgget(12345, 0666 | IPC_CREAT);
+
+    struct msg m;
+
+    while (1)
+    {
+        msgrcv(msgid, &m, 100, 0, 0);
+
+        printf("Received: %s\n", m.text);
+
+        if (strncmp(m.text, "end", 3) == 0)
+            break;
+    }
+
+    msgctl(msgid, IPC_RMID, NULL);
+
+    return 0;
+}</code></pre>
+    </div>
+</div>
+<div class="code-item">
+    <div class="code-header">
+        <span>Segmentation Technique</span>
+        <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
+    </div>
+    <div class="code-content">
+<pre><code>#include &lt;stdio.h&gt;
+
+int main()
+{
+    int n, limit[10], base[10];
+    int seg, off, i;
+
+    printf("Number of segments: ");
+    scanf("%d", &n);
+
+    for(i = 0; i &lt; n; i++)
+    {
+        printf("Limit and Base of segment %d: ", i);
+        scanf("%d%d", &limit[i], &base[i]);
+    }
+
+    while(1)
+    {
+        printf("Enter segment number and offset: ");
+        scanf("%d%d", &seg, &off);
+
+        if(seg &gt;= n)
+            printf("Invalid Segment\n");
+        else if(off &gt;= limit[seg])
+            printf("Invalid Offset\n");
+        else
+            printf("Physical Address = %d\n", base[seg] + off);
+    }
+
+    return 0;
+}</code></pre>
+    </div>
+</div>
+<div class="code-item">
+    <div class="code-header">
+        <span>Pipes</span>
+        <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
+    </div>
+    <div class="code-content">
+<pre><code>#include &lt;string.h&gt;
+#include &lt;fcntl.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;sys/wait.h&gt;
+#include &lt;unistd.h&gt;
+
+int main()
+{
+    int Pipe[2];
+    char string[100];
+
+    if (pipe(Pipe) == -1)
+    {
+        perror("Filed to create pipe");
+        exit(1);
+    }
+
+    scanf("%s", string);
+
+    write(Pipe[1], string, strlen(string)+1);
+
+    printf("\n");
+
+    read(Pipe[0], string, 5);
+
+    printf("%s", string);
+
+    return 0;
+}</code></pre>
+    </div>
+</div>
+<div class="code-item">
+    <div class="code-header">
+        <span>FIFO Program 1 - Writes First Then Reads</span>
+        <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
+    </div>
+    <div class="code-content">
+<pre><code>#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+#include &lt;fcntl.h&gt;
+#include &lt;sys/stat.h&gt;
+#include &lt;sys/types.h&gt;
+#include &lt;unistd.h&gt;
+
+int main()
+{
+    int fd;
+
+    char *myfifo = "/home/student/kk_22/myfifo";
+
+    mkfifo(myfifo, 0666);
+
+    char arr1[80], arr2[80];
+
+    while (1)
+    {
+        fgets(arr2, 80, stdin);
+
+        fd = open(myfifo, O_WRONLY);
+
+        write(fd, arr2, strlen(arr2)+1);
+
+        close(fd);
+
+        fd = open(myfifo, O_RDONLY);
+
+        read(fd, arr1, sizeof(arr1));
+
+        printf("User2: %s\n", arr1);
+
+        close(fd);
+    }
+
+    return 0;
+}</code></pre>
+    </div>
+</div>
+<div class="code-item">
+    <div class="code-header">
+        <span>FIFO Program 2 - Reads First Then Writes</span>
+        <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
+    </div>
+    <div class="code-content">
+<pre><code>#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+#include &lt;fcntl.h&gt;
+#include &lt;sys/stat.h&gt;
+#include &lt;sys/types.h&gt;
+#include &lt;unistd.h&gt;
+
+int main()
+{
+    int fd1;
+
+    char *myfifo = "/home/student/kk_22/myfifo";
+
+    mkfifo(myfifo, 0666);
+
+    char str1[80], str2[80];
+
+    while (1)
+    {
+        printf("Waiting...\n");
+
+        fd1 = open(myfifo, O_RDONLY);
+
+        read(fd1, str1, 80);
+
+        printf("User1: %s\n", str1);
+
+        close(fd1);
+
+        fd1 = open(myfifo, O_WRONLY);
+
+        fgets(str2, 80, stdin);
+
+        write(fd1, str2, strlen(str2)+1);
+
+        close(fd1);
+    }
 
     return 0;
 }</code></pre>
