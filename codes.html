@@ -2,7 +2,7 @@
 
     <div class="code-header">
 
-        <span>Image Widget</span>
+        <span>Fixed Framing</span>
 
         <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
 
@@ -10,50 +10,56 @@
 
     <div class="code-content">
 
-<pre><code>import 'package:flutter/material.dart';
+<pre><code>#include &lt;stdio.h&gt;
 
-void main() {
-  runApp(MyApp());
-}
+int main()
+{
+    char data[50], stuffed[50], destuffed[50];
+    int frameSize, i, j = 0, position = 0;
 
-class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+    printf("Enter the data:\n");
+    scanf("%s", data);
 
-  @override
-  State&lt;MyApp&gt; createState() =&gt; _MyAppState();
-}
+    printf("Enter the fsize:\n");
+    scanf("%d", &amp;frameSize);
 
-class _MyAppState extends State&lt;MyApp&gt; {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Image'),
-        ),
-        body: Center(
-          child: Container(
-            height: 200,
-            width: 300,
-            child: Image.network(
-              'https://plus.unsplash.com/premium_photo-1666672388644-2d99f3feb9f1?w=500&amp;auto=format&amp;fit=crop&amp;q=60&amp;ixlib=rb-4.1.0&amp;ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8anBnfGVufDB8fDB8fHww',
-            ),
-          ),
-        ),
-      ),
-    );
-  }
+    for (i = 0; data[position] != '\0'; i++)
+    {
+        if (i % (frameSize) == 0)
+        {
+            stuffed[j++] = '0' + frameSize;
+        }
+        else
+        {
+            stuffed[j++] = data[position++];
+        }
+    }
+
+    stuffed[j] = '\0';
+
+    printf("Stuffed Data : %s\n", stuffed);
+
+    j = 0;
+    for (i = 1; stuffed[i] != '\0'; i++)
+        destuffed[j++] = stuffed[i];
+
+    destuffed[j] = '\0';
+
+    printf("DeStuffed Data : %s", destuffed);
+
+    return 0;
 }</code></pre>
 
     </div>
 
 </div>
 
+
 <div class="code-item">
 
     <div class="code-header">
 
-        <span>Stateless Widget</span>
+        <span>Variable-Length Framing</span>
 
         <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
 
@@ -61,34 +67,53 @@ class _MyAppState extends State&lt;MyApp&gt; {
 
     <div class="code-content">
 
-<pre><code>import 'package:flutter/material.dart';
+<pre><code>#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
 
-//main function
-void main() {
-  runApp(MyApp()); //leets change it
-}
+int main()
+{
+    char data[100];
+    int frameCount, frameSize[20];
+    int i, j, position = 0;
 
-//stateless widget class
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+    printf("Enter the string:\n");
+    scanf("%s", data);
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Text('HELLO'),
-    );
-  }
+    printf("Enter the number of frames:\n");
+    scanf("%d", &amp;frameCount);
+
+    printf("Enter frame size of the frames:\n");
+
+    for (i = 0; i &lt; frameCount; i++)
+    {
+        printf("Frame %d:", i + 1);
+        scanf("%d", &amp;frameSize[i]);
+    }
+
+    printf("\n The number of frames : %d\n", frameCount);
+
+    for (i = 0; i &lt; frameCount; i++)
+    {
+        printf("\n size of Frame %d : %d\n", i + 1, frameSize[i]);
+        printf("The content of the frame %d is :", i + 1);
+
+        for (j = 0; j &lt; frameSize[i] &amp;&amp; data[position] != '\0'; j++)
+            printf("%c", data[position++]);
+    }
+
+    return 0;
 }</code></pre>
 
     </div>
 
 </div>
 
+
 <div class="code-item">
 
     <div class="code-header">
 
-        <span>Stateful Widget</span>
+        <span>Bit Stuffing</span>
 
         <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
 
@@ -96,44 +121,50 @@ class MyApp extends StatelessWidget {
 
     <div class="code-content">
 
-<pre><code>import 'package:flutter/material.dart';
+<pre><code>#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
 
-//main function
-void main() {
-  runApp(MyApp());
-}
+int main()
+{
+    char input[100], output[200];
+    int i, j = 0, ones = 0;
 
-class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+    printf("\n enter a text:");
+    gets(input);
 
-  @override
-  State&lt;MyApp&gt; createState() =&gt; _MyAppState();
-}
+    for (i = 0; input[i] != '\0'; i++)
+    {
+        output[j++] = input[i];
 
-class _MyAppState extends State&lt;MyApp&gt; {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Column(
-        children: [
-          Text('data-1'),
-          Text('data-2'),
-          Text('data-3')
-        ],
-      ),
-    );
-  }
+        if (input[i] == '1')
+            ones++;
+        else
+            ones = 0;
+
+        if (ones == 5)
+        {
+            output[j++] = '0';
+            ones = 0;
+        }
+    }
+
+    output[j] = '\0';
+
+    printf("\n output is:01111110 %s 01111110", output);
+
+    return 0;
 }</code></pre>
 
     </div>
 
 </div>
 
+
 <div class="code-item">
 
     <div class="code-header">
 
-        <span>Sum of Two Numbers</span>
+        <span>Character Stuffing - FLAG / ESC</span>
 
         <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
 
@@ -141,24 +172,54 @@ class _MyAppState extends State&lt;MyApp&gt; {
 
     <div class="code-content">
 
-<pre><code>void main() {
-  int num1 = 10;
-  int num2 = 20;
+<pre><code>#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
 
-  int sum = num1 + num2;
+int main()
+{
+    char input[100], output[200];
+    int i, j = 0;
 
-  print("Sum = $sum");
+    printf("\n enter a text:");
+    gets(input);
+
+    for (i = 0; input[i] != '\0'; i++)
+    {
+        if (strncmp(input + i, "FLAG", 4) == 0)
+        {
+            strcpy(output + j, "ESC FLAG");
+            j += 8;
+            i += 3;
+        }
+        else if (strncmp(input + i, "ESC", 3) == 0)
+        {
+            strcpy(output + j, "ESC ESC");
+            j += 7;
+            i += 2;
+        }
+        else
+        {
+            output[j++] = input[i];
+        }
+    }
+
+    output[j] = '\0';
+
+    printf("\n output is:FLAG %s FLAG", output);
+
+    return 0;
 }</code></pre>
 
     </div>
 
 </div>
 
+
 <div class="code-item">
 
     <div class="code-header">
 
-        <span>Greater of Two Numbers</span>
+        <span>Character Stuffing - DLE / STX / ETX</span>
 
         <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
 
@@ -166,28 +227,54 @@ class _MyAppState extends State&lt;MyApp&gt; {
 
     <div class="code-content">
 
-<pre><code>void main() {
-  int num1 = 10;
-  int num2 = 20;
+<pre><code>#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
 
-  if (num1 &gt; num2) {
-    print("$num1 is greater");
-  } else if (num2 &gt; num1) {
-    print("$num2 is greater");
-  } else {
-    print("Both are equal");
-  }
+int main()
+{
+    char input[100], output[200];
+    int i, j = 0;
+
+    printf("\n enter a text:");
+    gets(input);
+
+    for (i = 0; input[i] != '\0'; i++)
+    {
+        if (strncmp(input + i, "DLESTX", 4) == 0)
+        {
+            strcpy(output + j, "DLE DLE");
+            j += 7;
+            i += 3;
+        }
+        else if (strncmp(input + i, "DLE", 3) == 0)
+        {
+            strcpy(output + j, "DLE DLE");
+            j += 7;
+            i += 2;
+        }
+        else
+        {
+            output[j++] = input[i];
+        }
+    }
+
+    output[j] = '\0';
+
+    printf("\n output is: DLESTX %s DLEETX", output);
+
+    return 0;
 }</code></pre>
 
     </div>
 
 </div>
 
+
 <div class="code-item">
 
     <div class="code-header">
 
-        <span>Factorial of a Number</span>
+        <span>Checksum</span>
 
         <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
 
@@ -195,107 +282,66 @@ class _MyAppState extends State&lt;MyApp&gt; {
 
     <div class="code-content">
 
-<pre><code>void main() {
-  int num = 5;
-  int factorial = 1;
+<pre><code>#include &lt;stdio.h&gt;
 
-  for (int i = 1; i &lt;= num; i++) {
-    factorial = factorial * i;
-  }
+int sender(int data[], int size)
+{
+    int sum = 0;
+    printf("\n****SENDER SIDE****\n");
 
-  print("Factorial = $factorial");
-}</code></pre>
+    for (int i = 0; i &lt; size; i++)
+        sum += data[i];
 
-    </div>
+    printf("SUM IS: %d", sum);
 
-</div>
+    int checksum = ~sum;
+    printf("\nCHECKSUM IS:%d", checksum);
 
-<div class="code-item">
-
-    <div class="code-header">
-
-        <span>Combined Layout Example</span>
-
-        <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
-
-    </div>
-
-    <div class="code-content">
-
-<pre><code>import 'package:flutter/material.dart';
-
-void main() {
-  runApp(MyApp());
+    return checksum;
 }
 
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Combined Layout Example'),
-        ),
-        body: Center(
-          child: Column(
-            children: &lt;Widget&gt;[
-              Row(
-                children: &lt;Widget&gt;[
-                  Container(
-                    color: Colors.red,
-                    width: 50,
-                    height: 50,
-                  ),
-                  Container(
-                    color: Colors.green,
-                    width: 50,
-                    height: 50,
-                  ),
-                  Container(
-                    color: Colors.blue,
-                    width: 50,
-                    height: 50,
-                  ),
-                ],
-              ),
-              SizedBox(height: 20),
-              Stack(
-                alignment: Alignment.center,
-                children: &lt;Widget&gt;[
-                  Container(
-                    color: Colors.red,
-                    width: 200,
-                    height: 200,
-                  ),
-                  Container(
-                    color: Colors.green,
-                    width: 150,
-                    height: 150,
-                  ),
-                  Container(
-                    color: Colors.blue,
-                    width: 100,
-                    height: 100,
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+void receiver(int data[], int size, int senderChecksum)
+{
+    int sum = 0;
+    printf("\n\n****RECEIVER SIDE****\n");
+
+    for (int i = 0; i &lt; size; i++)
+        sum += data[i];
+
+    printf("SUM IS:%d", sum);
+
+    int checksum = ~(sum + senderChecksum);
+    printf("\nCHECKSUM IS:%d", checksum);
+}
+
+int main()
+{
+    int size;
+    printf("\nENTER SIZE OF THE STRING:");
+    scanf("%d", &amp;size);
+
+    int data[size];
+    printf("ENTER THE ELEMENTS OF THE ARRAY TO CALCULATE CHECKSUM:\n");
+
+    for (int i = 0; i &lt; size; i++)
+        scanf("%d", &amp;data[i]);
+
+    int senderChecksum = sender(data, size);
+    receiver(data, size, senderChecksum);
+
+    return 0;
 }</code></pre>
 
     </div>
 
 </div>
 
+
 <div class="code-item">
 
     <div class="code-header">
 
-        <span>State Management using setState</span>
+        <span>CRC - Cyclic Redundancy Check</span>
 
         <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
 
@@ -303,50 +349,224 @@ class MyApp extends StatelessWidget {
 
     <div class="code-content">
 
-<pre><code>import 'package:flutter/material.dart';
+<pre><code>#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
 
-void main() {
-  runApp(MyApp());
-}
+int main()
+{
+    char message[50], generator[20], temp[20];
+    int messageLength, generatorLength, error = 0;
 
-class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+    printf("\n enter message");
+    gets(message);
 
-  @override
-  State&lt;MyApp&gt; createState() =&gt; _MyAppState();
-}
+    messageLength = strlen(message);
+    printf("\n msg length:%d", messageLength);
 
-class _MyAppState extends State&lt;MyApp&gt; {
-  String value = "Test"; //variable initialized
+    printf("\n enter generator or divisor");
+    gets(generator);
 
-  //fucntion to change the value
-  void clickMe() {
-    setState(() {
-      value = "Test done";
-    });
-  }
+    generatorLength = strlen(generator);
+    printf("\n generator msg length:%d", generatorLength);
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('simple Flutter app'),
-        ),
-        body: Center(
-          child: Column(
-            children: [
-              Text('$value'),
-            ],
-          ),
-        ),
-        floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.add),
-          onPressed: clickMe,
-        ),
-      ),
-    );
-  }
+    // Add zeros
+    for (int i = 0; i &lt; generatorLength - 1; i++)
+        message[messageLength + i] = '0';
+
+    message[messageLength + generatorLength - 1] = '\0';
+
+    printf("\n after padding,msg is:%s", message);
+
+    // CRC division
+    for (int i = 0; i &lt; generatorLength; i++)
+        temp[i] = message[i];
+
+    for (int i = 0; i &lt; messageLength; i++)
+    {
+        if (temp[0] == '1')
+        {
+            for (int j = 0; j &lt; generatorLength; j++)
+                temp[j] = (temp[j] == generator[j]) ? '0' : '1';
+        }
+
+        for (int j = 0; j &lt; generatorLength - 1; j++)
+            temp[j] = temp[j + 1];
+
+        temp[generatorLength - 1] = message[i + generatorLength];
+    }
+
+    temp[generatorLength - 1] = '\0';
+
+    printf("\n remainder is:%s", temp);
+
+    for (int i = 0; i &lt; generatorLength - 1; i++)
+        message[messageLength + i] = temp[i];
+
+    message[messageLength + generatorLength - 1] = '\0';
+
+    printf("\n after adding remainder,msg is:%s", message);
+
+    printf("\n enter the received message");
+    gets(message);
+
+    // Check received message
+    for (int i = 0; i &lt; generatorLength; i++)
+        temp[i] = message[i];
+
+    for (int i = 0; i &lt; messageLength; i++)
+    {
+        if (temp[0] == '1')
+        {
+            for (int j = 0; j &lt; generatorLength; j++)
+                temp[j] = (temp[j] == generator[j]) ? '0' : '1';
+        }
+
+        for (int j = 0; j &lt; generatorLength - 1; j++)
+            temp[j] = temp[j + 1];
+
+        temp[generatorLength - 1] = message[i + generatorLength];
+    }
+
+    temp[generatorLength - 1] = '\0';
+
+    printf("\n remainder is:%s", temp);
+
+    for (int i = 0; i &lt; generatorLength - 1; i++)
+    {
+        if (temp[i] != '0')
+        {
+            error = 1;
+            break;
+        }
+    }
+
+    if (error == 0)
+        printf("\n no error in received message");
+    else
+        printf("\n error in received message");
+
+    return 0;
+}</code></pre>
+
+    </div>
+
+</div>
+
+
+<div class="code-item">
+
+    <div class="code-header">
+
+        <span>Go-Back-N Algorithm</span>
+
+        <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
+
+    </div>
+
+    <div class="code-content">
+
+<pre><code>#include &lt;stdio.h&gt;
+
+int main()
+{
+    int windowSize, sent = 0, acknowledgement;
+
+    printf("enter window size\n");
+    scanf("%d", &amp;windowSize);
+
+    while (1)
+    {
+        for (int i = 0; i &lt; windowSize; i++)
+        {
+            printf("Frame %d has been transmitted.\n", sent);
+            sent++;
+
+            if (sent == windowSize)
+                break;
+        }
+
+        printf("\nPlease enter the last Acknowledgement received.\n");
+        scanf("%d", &amp;acknowledgement);
+
+        if (acknowledgement == windowSize)
+            break;
+
+        sent = acknowledgement;
+    }
+
+    return 0;
+}</code></pre>
+
+    </div>
+
+</div>
+
+
+<div class="code-item">
+
+    <div class="code-header">
+
+        <span>IP Address Class</span>
+
+        <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
+
+    </div>
+
+    <div class="code-content">
+
+<pre><code>#include &lt;stdio.h&gt;
+
+int main()
+{
+    int a, b, c, d;
+
+    printf("Enter an IP Address: ");
+    scanf("%d.%d.%d.%d", &amp;a, &amp;b, &amp;c, &amp;d);
+
+    printf("IP Address: %d.%d.%d.%d\n", a, b, c, d);
+
+    if (a &lt; 1 || a &gt; 255 || b &lt; 0 || b &gt; 255 ||
+        c &lt; 0 || c &gt; 255 || d &lt; 0 || d &gt; 255)
+    {
+        printf("Reserved IP Address\n");
+    }
+    else if (a &gt;= 1 &amp;&amp; a &lt;= 126)
+    {
+        printf("Class: A\n");
+        printf("Network ID: %d.0.0.0\n", a);
+        printf("Host ID: 0.%d.%d.%d\n", b, c, d);
+        printf("Default Subnet Mask: 255.0.0.0\n");
+    }
+    else if (a &gt;= 128 &amp;&amp; a &lt;= 191)
+    {
+        printf("Class: B\n");
+        printf("Network ID: %d.%d.0.0\n", a, b);
+        printf("Host ID: 0.0.%d.%d\n", c, d);
+        printf("Default Subnet Mask: 255.255.0.0\n");
+    }
+    else if (a &gt;= 192 &amp;&amp; a &lt;= 223)
+    {
+        printf("Class: C\n");
+        printf("Network ID: %d.%d.%d.0\n", a, b, c);
+        printf("Host ID: 0.0.0.%d\n", d);
+        printf("Default Subnet Mask: 255.255.255.0\n");
+    }
+    else if (a &gt;= 224 &amp;&amp; a &lt;= 239)
+    {
+        printf("Class: D\n");
+        printf("Class D is used for multicasting.\n");
+    }
+    else if (a &gt;= 240 &amp;&amp; a &lt;= 255)
+    {
+        printf("Class: E\n");
+        printf("Class E is reserved for experimental use.\n");
+    }
+    else
+    {
+        printf("Reserved IP Address\n");
+    }
+
+    return 0;
 }</code></pre>
 
     </div>
