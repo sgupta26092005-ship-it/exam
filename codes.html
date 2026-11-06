@@ -1,152 +1,15 @@
 <div class="code-item">
+
     <div class="code-header">
-        <span>4 a) Set up navigation between different screens using Navigator.</span>
-        <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
-    </div>
-    <div class="code-content">
-<pre><code>import 'package:flutter/material.dart';
 
-void main() {
-  runApp(MyApp());
-}
-
-//1st MyApp class - hub class
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: HomeScreen(),
-    );
-  }
-}
-
-//Class HomeScreen- first page in app
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Home screen'),
-      ),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => SecondScreen()),
-            );
-          },
-          child: Text('Go to Second Screen'),
-        ),
-      ),
-    );
-  }
-}
-
-//3rd claas SecondScreen- second page
-class SecondScreen extends StatelessWidget {
-  const SecondScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Second screen'),
-      ),
-      body: ElevatedButton(
-        onPressed: () {
-          Navigator.pop(context);
-        },
-        child: Text('Go back to Home screen'),
-      ),
-    );
-  }
-}</code></pre>
-    </div>
-</div>
-
-<div class="code-item">
-    <div class="code-header">
-        <span>4 b) Implement navigation with named routes.</span>
-        <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
-    </div>
-    <div class="code-content">
-<pre><code>import 'package:flutter/material.dart';
-
-void main() {
-  runApp(MyApp());
-}
-
-//1st MyApp class - hub class
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      initialRoute: '/',
-      routes: {
-        '/': (context) => HomeScreen(),
-        '/second': (context) => SecondScreen(),
-      },
-    );
-  }
-}
-
-//Class HomeScreen- first page in app
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Home screen'),
-      ),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            Navigator.pushNamed(context, '/second');
-          },
-          child: Text('Go to Second Screen'),
-        ),
-      ),
-    );
-  }
-}
-
-//3rd claas SecondScreen- second page
-class SecondScreen extends StatelessWidget {
-  const SecondScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Second screen'),
-      ),
-      body: ElevatedButton(
-        onPressed: () {
-          Navigator.pop(context);
-        },
-        child: Text('Go back to Home screen'),
-      ),
-    );
-  }
-}</code></pre>
-    </div>
-</div>
-
-<div class="code-item">
-    <div class="code-header">
         <span>3 a) Design a responsive UI that adapts to different screen sizes</span>
+
         <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
+
     </div>
+
     <div class="code-content">
+
 <pre><code>import 'package:flutter/material.dart';
 
 //main function
@@ -167,15 +30,24 @@ class MyApp extends StatelessWidget {
     );
   }
 }</code></pre>
+
     </div>
+
 </div>
 
+
 <div class="code-item">
+
     <div class="code-header">
+
         <span>3 b) Implement media queries and breakpoints for responsiveness.</span>
+
         <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
+
     </div>
+
     <div class="code-content">
+
 <pre><code>import 'package:flutter/material.dart';
 
 void main() {
@@ -250,5 +122,742 @@ class ResponsiveLayout extends StatelessWidget {
     );
   }
 }</code></pre>
+
     </div>
+
+</div>
+
+
+<div class="code-item">
+
+    <div class="code-header">
+
+        <span>4 a) Set up navigation between different screens using Navigator.</span>
+
+        <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
+
+    </div>
+
+    <div class="code-content">
+
+<pre><code>import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+//1st MyApp class - hub class
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: HomeScreen(),
+    );
+  }
+}
+
+//Class HomeScreen- first page in app
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Home screen'),
+      ),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => SecondScreen()),
+            );
+          },
+          child: Text('Go to Second Screen'),
+        ),
+      ),
+    );
+  }
+}
+
+//3rd claas SecondScreen- second page
+class SecondScreen extends StatelessWidget {
+  const SecondScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Second screen'),
+      ),
+      body: ElevatedButton(
+        onPressed: () {
+          Navigator.pop(context);
+        },
+        child: Text('Go back to Home screen'),
+      ),
+    );
+  }
+}</code></pre>
+
+    </div>
+
+</div>
+
+
+<div class="code-item">
+
+    <div class="code-header">
+
+        <span>4 b) Implement navigation with named routes.</span>
+
+        <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
+
+    </div>
+
+    <div class="code-content">
+
+<pre><code>import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+//1st MyApp class - hub class
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      initialRoute: '/',
+      routes: {
+        '/': (context) => HomeScreen(),
+        '/second': (context) => SecondScreen(),
+      },
+    );
+  }
+}
+
+//Class HomeScreen- first page in app
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Home screen'),
+      ),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            Navigator.pushNamed(context, '/second');
+          },
+          child: Text('Go to Second Screen'),
+        ),
+      ),
+    );
+  }
+}
+
+//3rd claas SecondScreen- second page
+class SecondScreen extends StatelessWidget {
+  const SecondScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Second screen'),
+      ),
+      body: ElevatedButton(
+        onPressed: () {
+          Navigator.pop(context);
+        },
+        child: Text('Go back to Home screen'),
+      ),
+    );
+  }
+}</code></pre>
+
+    </div>
+
+</div>
+
+
+<div class="code-item">
+
+    <div class="code-header">
+
+        <span>6 a) Create custom widgets for specific UI elements.</span>
+
+        <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
+
+    </div>
+
+    <div class="code-content">
+
+<pre><code>import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: HomeScreen(),
+    );
+  }
+}
+
+//Home screen - class
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Custom Widget Example"),
+      ),
+      body: Center(
+        child: IconTextButton(
+          icon: Icons.thumb_up, //variable 1
+          text: 'Like', //variable 2
+          onPressed: () {
+            //variable 3
+            print('Button Pressed!');
+          },
+        ),
+      ),
+    );
+  }
+}
+
+//IconTextButton- class
+class IconTextButton extends StatelessWidget {
+  //variable declarations
+  final IconData icon; //var-1 declaration
+  final String text; //var-2 declration
+  final VoidCallback onPressed; //var-3 declaration
+
+  //constructor
+  IconTextButton({
+    required this.icon,
+    required this.text,
+    required this.onPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton.icon(
+      onPressed: onPressed,
+      icon: Icon(icon),
+      label: Text(text),
+    );
+  }
+}</code></pre>
+
+    </div>
+
+</div>
+
+
+<div class="code-item">
+
+    <div class="code-header">
+
+        <span>6 b) Apply styling using themes and custom styles.</span>
+
+        <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
+
+    </div>
+
+    <div class="code-content">
+
+<pre><code>import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: HomeScreen(),
+    );
+  }
+}
+
+//Home screen - class
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Custom Widget Example"),
+      ),
+      body: Center(
+        child: IconTextButton(
+          icon: Icons.thumb_up, //variable 1
+          text: 'Like', //variable 2
+          onPressed: () {
+            //variable 3
+            print('Button Pressed!');
+          },
+        ),
+      ),
+    );
+  }
+}
+
+//IconTextButton- class
+class IconTextButton extends StatelessWidget {
+  //variable declarations
+  final IconData icon; //var-1 declaration
+
+  final String text; //var-2 declration
+  final VoidCallback onPressed; //var-3 declaration
+
+  //constructor
+  IconTextButton({
+    required this.icon,
+    required this.text,
+    required this.onPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton.icon(
+      onPressed: onPressed,
+      icon: Icon(icon),
+      label: Text(text),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.pink,
+        foregroundColor: Colors.black,
+        //padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      ),
+    );
+  }
+}</code></pre>
+
+    </div>
+
+</div>
+
+
+<div class="code-item">
+
+    <div class="code-header">
+
+        <span>7 a) Design a form with various input fields.</span>
+
+        <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
+
+    </div>
+
+    <div class="code-content">
+
+<pre><code>import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(title: Text('Simple Form Example')),
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: SimpleForm(),
+        ),
+      ),
+    );
+  }
+}
+
+class SimpleForm extends StatefulWidget {
+  @override
+  _SimpleFormState createState() => _SimpleFormState();
+}
+
+class _SimpleFormState extends State<SimpleForm> {
+  final _nameController = TextEditingController();
+  final _ageController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        TextField(
+          controller: _nameController,
+          decoration: InputDecoration(labelText: 'Name'),
+        ),
+        TextField(
+          controller: _ageController,
+          decoration: InputDecoration(labelText: 'Age'),
+          keyboardType: TextInputType.number,
+        ),
+        SizedBox(height: 20),
+        ElevatedButton(
+          onPressed: () {
+            // Action on button press
+            final name = _nameController.text;
+            final age = _ageController.text;
+            print('Name: $name, Age: $age');
+          },
+          child: Text('Submit'),
+        ),
+      ],
+    );
+  }
+}</code></pre>
+
+    </div>
+
+</div>
+
+
+<div class="code-item">
+
+    <div class="code-header">
+
+        <span>7 b) Implement form validation and error handling.</span>
+
+        <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
+
+    </div>
+
+    <div class="code-content">
+
+<pre><code>import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(title: Text('Simple Form with Validation')),
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: SimpleForm(),
+        ),
+      ),
+    );
+  }
+}
+
+class SimpleForm extends StatefulWidget {
+  @override
+  _SimpleFormState createState() => _SimpleFormState();
+}
+
+class _SimpleFormState extends State<SimpleForm> {
+  final _formKey = GlobalKey<FormState>();
+  final _nameController = TextEditingController();
+  final _ageController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Form(
+      key: _formKey,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          TextFormField(
+            controller: _nameController,
+            decoration: InputDecoration(labelText: 'Name'),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter your name';
+              }
+              return null;
+            },
+          ),
+          TextFormField(
+            controller: _ageController,
+            decoration: InputDecoration(labelText: 'Age'),
+            keyboardType: TextInputType.number,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter your age';
+              }
+              final age = int.tryParse(value);
+              if (age == null || age <= 0) {
+                return 'Please enter a valid age';
+              }
+              return null;
+            },
+          ),
+          SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: () {
+              if (_formKey.currentState?.validate() ?? false) {
+                // If the form is valid, display a snackbar.
+                final name = _nameController.text;
+                final age = _ageController.text;
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Name: $name, Age: $age')),
+                );
+              }
+            },
+            child: Text('Submit'),
+          ),
+        ],
+      ),
+    );
+  }
+}</code></pre>
+
+    </div>
+
+</div>
+
+
+<div class="code-item">
+
+    <div class="code-header">
+
+        <span>8 a) Add animations to UI elements using Flutter's animation framework.</span>
+
+        <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
+
+    </div>
+
+    <div class="code-content">
+
+<pre><code>import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: HomeScreen(),
+    );
+  }
+}
+
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Custon widget with animation"),
+      ),
+      body: Center(
+        child: AnimatedIconTextButton(
+          icon: Icons.thumb_up,
+          text: 'Like',
+          onPressed: () {
+            print("Button Pressed!");
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class AnimatedIconTextButton extends StatefulWidget {
+  final IconData icon;
+  final String text;
+  final VoidCallback onPressed;
+
+  //constructors
+  const AnimatedIconTextButton({
+    Key? key,
+    required this.icon,
+    required this.text,
+    required this.onPressed,
+  }) : super(key: key);
+
+  @override
+  State<AnimatedIconTextButton> createState() =>
+      _AnimatedIconTextButtonState();
+}
+
+class _AnimatedIconTextButtonState extends
+    State<AnimatedIconTextButton> {
+  bool _isPressed = false;
+
+  void _handlePress() {
+    setState(() {
+      _isPressed = !_isPressed; //on->off//off->on
+    });
+    widget.onPressed();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedContainer(
+      duration: Duration(milliseconds: 300),
+      width: _isPressed ? 200 : 150,
+      height: _isPressed ? 100 : 70,
+      child: ElevatedButton.icon(
+        onPressed: _handlePress,
+        icon: Icon(widget.icon),
+        label: Text(widget.text),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.blue,
+          foregroundColor: Colors.green,
+        ),
+      ),
+    );
+  }
+}</code></pre>
+
+    </div>
+
+</div>
+
+                  <div class="code-item">
+
+    <div class="code-header">
+
+        <span>8 b) Experiment with different types of animations (fade, slide)</span>
+
+        <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
+
+    </div>
+
+    <div class="code-content">
+
+<pre><code>import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: HomeScreen(),
+    );
+  }
+}
+
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Custon widget with animation"),
+      ),
+      body: Center(
+        child: FadeIconTextButton(
+          icon: Icons.thumb_up,
+          text: 'Like',
+          onPressed: () {
+            print("Button Pressed!");
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class FadeIconTextButton extends StatefulWidget {
+  final IconData icon;
+  final String text;
+  final VoidCallback onPressed;
+
+  //constructors
+  const FadeIconTextButton({
+    Key? key,
+    required this.icon,
+    required this.text,
+    required this.onPressed,
+  }) : super(key: key);
+
+  @override
+  State&lt;FadeIconTextButton&gt; createState() =>
+      _FadeIconTextButtonState();
+}
+
+class _FadeIconTextButtonState extends State&lt;FadeIconTextButton&gt;
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation&lt;double&gt; _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 500),
+      vsync: this,
+    );
+
+    _animation = CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeInOut,
+    );
+  }
+
+  void _handlePress() {
+    if (_controller.isCompleted) {
+      _controller.reverse();
+    } else {
+      _controller.forward();
+    }
+    widget.onPressed();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FadeTransition(
+      opacity: _animation,
+      child: ElevatedButton.icon(
+        onPressed: _handlePress,
+        icon: Icon(widget.icon),
+        label: Text(widget.text),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.amber,
+          foregroundColor: Colors.black,
+        ),
+      ),
+    );
+  }
+}</code></pre>
+
+    </div>
+
 </div>
